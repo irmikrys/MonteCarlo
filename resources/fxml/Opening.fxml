@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.OpeningController">
+   <top>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Monte Carlo Method">
+               <font>
+                  <Font name="Apple Chancery" size="36.0" />
+               </font>
+            </Label>
+            <Label text="Problem Solving">
+               <font>
+                  <Font name="Apple Chancery" size="24.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+   </top>
+   <center>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="60.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="btnCreate" mnemonicParsing="false" onAction="#goToCreator" text="Create">
+               <tooltip>
+                  <Tooltip text="Create new problem..." />
+               </tooltip></Button>
+            <Button fx:id="btnProperties" mnemonicParsing="false" onAction="#goToProperties" text="Properties">
+               <tooltip>
+                  <Tooltip text="Change theme..." />
+               </tooltip></Button>
+            <Button fx:id="btnExit" mnemonicParsing="false" onAction="#exit" text="Exit">
+               <tooltip>
+                  <Tooltip text="Exit program..." />
+               </tooltip></Button>
+         </children>
+         <padding>
+            <Insets bottom="30.0" />
+         </padding>
+      </VBox>
+   </center>
+   <bottom>
+      <Label text="Click any menu button..." BorderPane.alignment="CENTER" />
+   </bottom>
+</BorderPane>
