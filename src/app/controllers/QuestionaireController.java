@@ -18,10 +18,19 @@ import java.util.*;
  */
 public class QuestionaireController implements Initializable {
 
+    public static boolean nonPolyEnabled;
+
     @FXML public Button btnAddLimit;
     @FXML public Button btnCompute;
 
     @FXML public TextField tfFunction;
+
+    @FXML public Label lblResult;
+    @FXML public Label lblFcn;
+    @FXML public Label lblErrors;
+
+    @FXML public CheckBox minimizeCheck;
+    @FXML public CheckBox maximizeCheck;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -84,4 +93,5 @@ public class QuestionaireController implements Initializable {
         }
 
     }
+
 }

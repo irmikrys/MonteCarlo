@@ -11,16 +11,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Separator;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Created on 29.04.2017.
@@ -31,6 +29,7 @@ public class PropertiesController implements Initializable{
     private List<String> listCss;
     @FXML public ChoiceBox propChoiceBox;
     @FXML public Button propBackMenu;
+    @FXML public CheckBox propCheck;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -53,12 +52,33 @@ public class PropertiesController implements Initializable{
             scene.getStylesheets().add(checkedCss);
             Main.currentCss = checkedCss;
         });
+
+        setCheckBox();
+        propCheck.selectedProperty().addListener((ov, old_val, new_val) -> {
+            if(new_val) {
+                System.out.println("Non-poly enabled");
+                QuestionaireController.nonPolyEnabled = true;
+            }
+            else {
+                System.out.println("Non-poly disabled");
+                QuestionaireController.nonPolyEnabled = false;
+            }
+        });
     }
 
     @FXML
     public void backToMainMenu(ActionEvent e) throws IOException {
         Parent root2 = FXMLLoader.load(Main.class.getResource("/fxml/Opening.fxml"));
         propBackMenu.getScene().setRoot(root2);
+    }
+
+    private void setCheckBox(){
+        if(QuestionaireController.nonPolyEnabled){
+            propCheck.setSelected(true);
+        }
+        else {
+            propCheck.setSelected(false);
+        }
     }
 
     private void setCbCss() {

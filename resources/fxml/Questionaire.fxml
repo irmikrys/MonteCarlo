@@ -5,7 +5,6 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.QuestionaireController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
@@ -18,6 +17,8 @@
           <Menu mnemonicParsing="false" text="Edit">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#popupTheme" text="Change Theme..." />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <CheckMenuItem mnemonicParsing="false" text="Unspecified Action" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -29,7 +30,7 @@
       </MenuBar>
    </top>
    <bottom>
-      <Label text="Label" BorderPane.alignment="CENTER" />
+      <Label fx:id="lblErrors" text="Label" BorderPane.alignment="CENTER" />
    </bottom>
    <center>
       <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
@@ -44,7 +45,7 @@
                                  <content>
                                     <BorderPane prefHeight="450.0" prefWidth="402.0">
                                        <center>
-                                          <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+                                          <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0" BorderPane.alignment="CENTER">
                                              <children>
                                                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
                                                    <children>
@@ -52,12 +53,16 @@
                                                       <Button fx:id="btnAddLimit" mnemonicParsing="false" text="Add" />
                                                    </children>
                                                 </HBox>
+                                                <VBox fx:id="limitsVBox" />
                                                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
                                                    <children>
                                                       <Label text="Function: " />
                                                       <TextField fx:id="tfFunction" />
                                                    </children>
                                                 </HBox>
+                                                <Label fx:id="lblFcn" text="Users function" />
+                                                <CheckBox fx:id="minimizeCheck" mnemonicParsing="false" text="Minimize" />
+                                                <CheckBox fx:id="maximizeCheck" mnemonicParsing="false" text="Maximize" />
                                              </children>
                                           </VBox>
                                        </center>
@@ -84,7 +89,7 @@
                                           <Insets bottom="10.0" top="15.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <Label fx:id="lblResult" text="Label" />
+                                    <Label fx:id="lblResult" text="Computed result" />
                                  </children>
                               </VBox>
                            </center>

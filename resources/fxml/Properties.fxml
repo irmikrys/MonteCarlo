@@ -23,31 +23,27 @@
         </HBox>
     </top>
     <center>
-        <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+        <VBox alignment="CENTER" BorderPane.alignment="CENTER">
             <children>
-                <BorderPane prefHeight="200.0" prefWidth="200.0">
-                    <top>
-                        <AmbientLight color="CHARTREUSE" lightOn="true" BorderPane.alignment="CENTER">
-                            <effect>
-                                <Reflection />
-                            </effect>
-                        </AmbientLight>
-                    </top>
-                </BorderPane>
-                <BorderPane prefHeight="200.0" prefWidth="200.0">
-                    <center>
-                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" BorderPane.alignment="CENTER">
-                            <children>
-                                <Label text="Change Theme: ">
-                           <font>
-                              <Font size="14.0" />
-                           </font></Label>
-                                <ChoiceBox fx:id="propChoiceBox" />
-                            </children>
-                        </HBox>
-                    </center>
-                </BorderPane>
-                <BorderPane prefHeight="200.0" prefWidth="200.0" />
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                      <children>
+                          <Label text="Change Theme: ">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                          <ChoiceBox fx:id="propChoiceBox" />
+                      </children>
+                  </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <CheckBox fx:id="propCheck" mnemonicParsing="false" text="Enable non-polynomial">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </CheckBox>
+               </children>
+            </HBox>
             </children>
         </VBox>
     </center>
