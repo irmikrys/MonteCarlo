@@ -1,5 +1,6 @@
 package app.controllers;
 
+import app.ActionsHandler;
 import app.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -32,8 +33,42 @@ public class QuestionaireController implements Initializable {
     @FXML public CheckBox minimizeCheck;
     @FXML public CheckBox maximizeCheck;
 
+    @FXML public MenuItem miClose;
+    @FXML public MenuItem miNew;
+    @FXML public CheckMenuItem cmiEnPoly;
+
+    ////////////////////////////////////
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        setCmiEnPolyListener();
+        if(QuestionaireController.nonPolyEnabled) {
+            cmiEnPoly.setSelected(true);
+        }
+        setMaxCheckListener();
+        setMinCheckListener();
+    }
+
+    @FXML
+    public void closeAction(ActionEvent e) {
+        ActionsHandler.onClose(e, btnCompute);
+    }
+
+    @FXML
+    public void newAction(ActionEvent e) throws IOException {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.getDialogPane().getStylesheets().add(Main.currentCss);
+        alert.setHeaderText("");
+        alert.setTitle("New");
+        alert.setContentText("Are you sure you want to create new problem? All changes will be lost.");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+            new ActionsHandler().changeScene(btnCompute, "/fxml/Questionaire.fxml");
+        } else {
+            e.consume();
+        }
 
     }
 
@@ -92,6 +127,43 @@ public class QuestionaireController implements Initializable {
             System.out.println("Your choice: " + result.get());
         }
 
+    }
+
+    /////////////////////////////////////
+
+    private void setCmiEnPolyListener(){
+        cmiEnPoly.selectedProperty().addListener((ov, old_val, new_val) -> {
+            if(cmiEnPoly.isSelected()){
+                QuestionaireController.nonPolyEnabled = true;
+                System.out.println("Non-poly enabled cmi");
+            } else {
+                QuestionaireController.nonPolyEnabled = false;
+                System.out.println("Non-poly disabled cmi");
+            }
+        });
+    }
+
+    private void setMaxCheckListener() {
+        excludeDoubleCheck(maximizeCheck, minimizeCheck);
+    }
+
+    private void setMinCheckListener() {
+        excludeDoubleCheck(minimizeCheck, maximizeCheck);
+    }
+
+    ////////////////////////////////
+
+    private void excludeDoubleCheck(CheckBox first, CheckBox second){
+        first.selectedProperty().addListener((ov, old_val, new_val) -> {
+            if(second.isSelected()){
+                if(first.isSelected()){
+                    second.setSelected(false);
+                }
+                else{
+                    second.setSelected(true);
+                }
+            }
+        });
     }
 
 }

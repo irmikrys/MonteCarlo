@@ -11,14 +11,15 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
+              <MenuItem fx:id="miClose" mnemonicParsing="false" onAction="#closeAction" text="Close" />
+                  <MenuItem fx:id="miNew" mnemonicParsing="false" onAction="#newAction" text="New" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#popupTheme" text="Change Theme..." />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <CheckMenuItem mnemonicParsing="false" text="Unspecified Action" />
+                  <CheckMenuItem fx:id="cmiEnPoly" mnemonicParsing="false" text="Enable Non-Polynomial" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -43,7 +44,7 @@
                            <center>
                               <ScrollPane BorderPane.alignment="CENTER">
                                  <content>
-                                    <BorderPane prefHeight="450.0" prefWidth="402.0">
+                                    <BorderPane fx:id="borderPaneFirst" prefHeight="450.0" prefWidth="402.0">
                                        <center>
                                           <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0" BorderPane.alignment="CENTER">
                                              <children>
@@ -58,6 +59,7 @@
                                                    <children>
                                                       <Label text="Function: " />
                                                       <TextField fx:id="tfFunction" />
+                                                      <Button mnemonicParsing="false" text="Submit" />
                                                    </children>
                                                 </HBox>
                                                 <Label fx:id="lblFcn" text="Users function" />
