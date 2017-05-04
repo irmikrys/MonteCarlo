@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import org.apache.commons.lang3.StringUtils;
 
@@ -20,6 +21,8 @@ import java.util.*;
 public class QuestionaireController implements Initializable {
 
     public static boolean nonPolyEnabled;
+
+    @FXML public BorderPane borderPaneFirst;
 
     @FXML public Button btnAddLimit;
     @FXML public Button btnCompute;
@@ -127,6 +130,21 @@ public class QuestionaireController implements Initializable {
             System.out.println("Your choice: " + result.get());
         }
 
+    }
+
+    @FXML
+    public void addLimit(ActionEvent e) {
+        System.out.println("Action add limit not implemented...");
+    }
+
+    @FXML
+    public void submitFcn(ActionEvent e) {
+        System.out.println("Action submit function not implemented...");
+    }
+
+    @FXML
+    public void computeResult(ActionEvent e) {
+        System.out.println("Action compute not implemented...");
     }
 
     /////////////////////////////////////

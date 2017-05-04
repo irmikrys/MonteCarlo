@@ -51,7 +51,7 @@
                                                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
                                                    <children>
                                                       <Label text="Limitations: " />
-                                                      <Button fx:id="btnAddLimit" mnemonicParsing="false" text="Add" />
+                                                      <Button fx:id="btnAddLimit" mnemonicParsing="false" onAction="#addLimit" text="Add" />
                                                    </children>
                                                 </HBox>
                                                 <VBox fx:id="limitsVBox" />
@@ -59,7 +59,7 @@
                                                    <children>
                                                       <Label text="Function: " />
                                                       <TextField fx:id="tfFunction" />
-                                                      <Button mnemonicParsing="false" text="Submit" />
+                                                      <Button fx:id="btnSubmitFcn" mnemonicParsing="false" onAction="#submitFcn" text="Submit" />
                                                    </children>
                                                 </HBox>
                                                 <Label fx:id="lblFcn" text="Users function" />
@@ -81,7 +81,7 @@
                            <center>
                               <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
                                  <children>
-                                    <Button fx:id="btnCompute" mnemonicParsing="false" text="Compute">
+                                    <Button fx:id="btnCompute" mnemonicParsing="false" onAction="#computeResult" text="Compute">
                                        <VBox.margin>
                                           <Insets bottom="20.0" top="20.0" />
                                        </VBox.margin>
