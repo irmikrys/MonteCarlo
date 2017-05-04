@@ -5,15 +5,14 @@ import app.Algo;
 import app.ButtonFields;
 import app.Main;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -26,12 +25,13 @@ import java.util.*;
 public class QuestionaireController implements Initializable {
 
     public static boolean nonPolyEnabled;
-    public ArrayList signsArr = new ArrayList<>(Arrays.asList("<", "<=", ">", ">="));
+    public ArrayList<String> signsArr = new ArrayList<>(Arrays.asList("<", "<=", ">", ">="));
     public List<ButtonFields> limitsButtons= new ArrayList<>();
 
     @FXML public BorderPane borderPaneFirst;
     @FXML public AnchorPane splitLeftAnchor;
     @FXML public SplitPane splitPane;
+    @FXML public VBox limitsVBox;
 
     @FXML public Button btnAddLimit;
     @FXML public Button btnSubmitFcn;
@@ -148,14 +148,36 @@ public class QuestionaireController implements Initializable {
 
     @FXML
     public void addLimit(ActionEvent e) {
-        lblErrors.setText("Action add limit not implemented...");
-
         //utworz hbox
-        //dodaj komponenty do hboxa
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER);
+        hBox.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        hBox.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        //utworz komponenty potrzebne do hboxa
+        TextField tfLim = new TextField();
+        ButtonFields bf = new ButtonFields();
+        bf.setText(signsArr.get(bf.getCounter()).toString());
+        TextField tfVal = new TextField();
+        tfVal.setPrefWidth(60);
+        Button submit = new Button("Submit"); //TODO: ustawić margines lewy
         //ustaw listenera dla buttona ButtonFields ze zmiana znaku
+        bf.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                bf.setCounter(bf.getCounter() + 1);
+                bf.setText(signsArr.get(bf.getCounter()));
+            }
+        });
         //dodaj button do tablicy
+        limitsButtons.add(bf);
         //ustaw listenera dla buttona zatwierdzajacego
-
+        //dodaj wszystkie komponenty do hboxa
+        hBox.getChildren().add(tfLim);
+        hBox.getChildren().add(bf);
+        hBox.getChildren().add(tfVal);
+        hBox.getChildren().add(submit);
+        //dodaj hboxa do vboxa
+        limitsVBox.getChildren().add(hBox);
     }
 
     @FXML
