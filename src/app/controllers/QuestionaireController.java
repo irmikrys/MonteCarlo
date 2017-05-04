@@ -5,7 +5,6 @@ import app.Algo;
 import app.ButtonFields;
 import app.Main;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -14,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import org.apache.commons.lang3.StringUtils;
+import org.mariuszgromada.math.mxparser.Function;
 
 import java.io.IOException;
 import java.net.URL;
@@ -24,9 +24,15 @@ import java.util.*;
  */
 public class QuestionaireController implements Initializable {
 
-    public static boolean nonPolyEnabled;
-    public ArrayList<String> signsArr = new ArrayList<>(Arrays.asList("<", "<=", ">", ">="));
-    public List<ButtonFields> limitsButtons= new ArrayList<>();
+    static boolean nonPolyEnabled;
+    private ArrayList<String> signsArr = new ArrayList<>(Arrays.asList("<", "<=", ">", ">="));
+    private ArrayList<ButtonFields> limitsButtons= new ArrayList<>();
+    private ArrayList<Function> functions = new ArrayList<>();
+    private boolean isAddReleased = true;
+    private boolean isTfLimOk;
+    private boolean isTfValOk;
+    private boolean isTfFcnOk;
+    private int limitsCounter;
 
     @FXML public BorderPane borderPaneFirst;
     @FXML public AnchorPane splitLeftAnchor;
@@ -148,29 +154,60 @@ public class QuestionaireController implements Initializable {
 
     @FXML
     public void addLimit(ActionEvent e) {
+        isAddReleased = false;
+        btnAddLimit.setDisable(!isAddReleased);
         //utworz hbox
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER);
         hBox.setPrefWidth(Region.USE_COMPUTED_SIZE);
         hBox.setPrefHeight(Region.USE_COMPUTED_SIZE);
+
         //utworz komponenty potrzebne do hboxa
         TextField tfLim = new TextField();
+
         ButtonFields bf = new ButtonFields();
-        bf.setText(signsArr.get(bf.getCounter()).toString());
+        bf.setText(signsArr.get(bf.getCounter()));
+
         TextField tfVal = new TextField();
         tfVal.setPrefWidth(60);
+
         Button submit = new Button("Submit"); //TODO: ustawić margines lewy
-        //ustaw listenera dla buttona ButtonFields ze zmiana znaku
-        bf.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                bf.setCounter(bf.getCounter() + 1);
-                bf.setText(signsArr.get(bf.getCounter()));
-            }
+        submit.setDisable(true);
+
+        //TODO: ustaw listenera dla pola tekstowego z funkcja
+        tfLim.textProperty().addListener((observable, oldValue, newValue) -> {
+            isTfLimOk = true;
+            if(isTfValOk && isTfLimOk) submit.setDisable(false);
         });
-        //dodaj button do tablicy
+
+        //ustaw listenera dla pola tekstowego z wartościa
+        tfVal.textProperty().addListener((observable, oldValue, newValue)  -> {
+            String text = tfVal.getText();
+            double value;
+            if(text.matches("^[0-9]+\\.?[0-9]*$")) {
+                value = Double.parseDouble(tfVal.getText());
+                isTfValOk = true;
+            }
+            else {
+                isTfValOk = false;
+            }
+
+            if(isTfValOk && isTfLimOk) submit.setDisable(false);
+        });
+
+        //ustaw listenera dla buttona ButtonFields ze zmiana znaku
+        bf.setOnAction(event -> {
+            bf.setCounter(bf.getCounter() + 1);
+            bf.setText(signsArr.get(bf.getCounter()));
+        });
         limitsButtons.add(bf);
+
         //ustaw listenera dla buttona zatwierdzajacego
+        submit.setOnAction(event -> {
+            String fcnString = tfLim.getText();
+            Function f = new Function(fcnString);
+            Label lbl = new Label((limitsCounter + 1) + ". " + fcnString + bf.getText() + tfVal.getText());
+        });
         //dodaj wszystkie komponenty do hboxa
         hBox.getChildren().add(tfLim);
         hBox.getChildren().add(bf);
@@ -178,6 +215,8 @@ public class QuestionaireController implements Initializable {
         hBox.getChildren().add(submit);
         //dodaj hboxa do vboxa
         limitsVBox.getChildren().add(hBox);
+
+        limitsCounter = limitsCounter + 1;
     }
 
     @FXML
