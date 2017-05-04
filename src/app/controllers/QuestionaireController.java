@@ -1,14 +1,19 @@
 package app.controllers;
 
 import app.ActionsHandler;
+import app.Algo;
+import app.ButtonFields;
 import app.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -21,16 +26,23 @@ import java.util.*;
 public class QuestionaireController implements Initializable {
 
     public static boolean nonPolyEnabled;
+    public ArrayList signsArr = new ArrayList<>(Arrays.asList("<", "<=", ">", ">="));
+    public List<ButtonFields> limitsButtons= new ArrayList<>();
 
     @FXML public BorderPane borderPaneFirst;
+    @FXML public AnchorPane splitLeftAnchor;
+    @FXML public SplitPane splitPane;
 
     @FXML public Button btnAddLimit;
+    @FXML public Button btnSubmitFcn;
+    @FXML public Button btnSetEps;
     @FXML public Button btnCompute;
 
     @FXML public TextField tfFunction;
 
-    @FXML public Label lblResult;
     @FXML public Label lblFcn;
+    @FXML public Label lblEpsVal;
+    @FXML public Label lblResult;
     @FXML public Label lblErrors;
 
     @FXML public CheckBox minimizeCheck;
@@ -50,6 +62,8 @@ public class QuestionaireController implements Initializable {
         }
         setMaxCheckListener();
         setMinCheckListener();
+        setLabelsOnStart();
+        Algo.epsilon = Double.parseDouble(lblEpsVal.getText());
     }
 
     @FXML
@@ -134,17 +148,56 @@ public class QuestionaireController implements Initializable {
 
     @FXML
     public void addLimit(ActionEvent e) {
-        System.out.println("Action add limit not implemented...");
+        lblErrors.setText("Action add limit not implemented...");
+
+        //utworz hbox
+        //dodaj komponenty do hboxa
+        //ustaw listenera dla buttona ButtonFields ze zmiana znaku
+        //dodaj button do tablicy
+        //ustaw listenera dla buttona zatwierdzajacego
+
     }
 
     @FXML
     public void submitFcn(ActionEvent e) {
-        System.out.println("Action submit function not implemented...");
+        lblErrors.setText("Action submit function not implemented...");
+    }
+
+    @FXML
+    public void setEpsilon(ActionEvent e) {
+        TextInputDialog dialog = new TextInputDialog(lblEpsVal.getText());
+        dialog.setTitle("Epsilon");
+        dialog.setHeaderText("");
+        dialog.setContentText("New epsilon value: ");
+        dialog.getDialogPane().getStylesheets().add(Main.currentCss);
+        lblErrors.setText("");
+
+        Pane first = dialog.getDialogPane();
+        //printDialogNodes(first);
+        Pane second = (Pane) first.getChildren().get(3);
+        //printDialogNodes(second);
+        TextField tf = (TextField) second.getChildren().get(1);
+        System.out.println(tf.getText());
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(eps -> {
+            String text = tf.getText();
+            double value;
+            if(text.matches("^[0-9]+\\.?[0-9]*$")) {
+                value = Double.parseDouble(tf.getText());
+            }
+            else {
+                value = Algo.epsilon;
+            }
+            Algo.epsilon = value;
+            lblEpsVal.setText(((Double) value).toString());
+            System.out.println("New epsilon value: " + Algo.epsilon);
+        });
     }
 
     @FXML
     public void computeResult(ActionEvent e) {
-        System.out.println("Action compute not implemented...");
+        lblErrors.setText("Action compute not implemented...");
     }
 
     /////////////////////////////////////
@@ -169,6 +222,13 @@ public class QuestionaireController implements Initializable {
         excludeDoubleCheck(minimizeCheck, maximizeCheck);
     }
 
+    private void setLabelsOnStart() {
+        lblErrors.setText("");
+        lblEpsVal.setText("0.1");
+        lblFcn.setText("");
+        lblResult.setText("Click Compute button to see result.");
+    }
+
     ////////////////////////////////
 
     private void excludeDoubleCheck(CheckBox first, CheckBox second){
@@ -184,4 +244,12 @@ public class QuestionaireController implements Initializable {
         });
     }
 
+    private void printDialogNodes(Pane pane){
+        List<Node> nodes = pane.getChildren();
+        for(int i = 0; i < nodes.size(); i++){
+            System.out.print("\t");
+            System.out.println(nodes.get(i).getClass());
+        }
+        System.out.println();
+    }
 }
