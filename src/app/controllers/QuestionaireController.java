@@ -249,14 +249,12 @@ public class QuestionaireController implements Initializable {
     }
     ////////////////////////////////////////
     private Function createFunctionFromString(Button btn, String tfString, ArrayList<String> tmpDecisionVars) {
-        char[] tfArr = tfString.toCharArray();
         //znajdowanie zmiennych decyzyjnych postaci xLICZBA
         for(int i = 0; i < tfString.length(); i++){
             System.out.println(tfString.charAt(i));
             if(tfString.charAt(i) == 'x'){
                 String num = "";
                 while ((++i < tfString.length()) && Character.isDigit(tfString.charAt(i)) ) {
-                    System.out.println("WTF " + (i < tfString.length()));
                     System.out.println(tfString.charAt(i));
                     num += tfString.charAt(i);
                 }
