@@ -251,32 +251,23 @@ public class QuestionaireController implements Initializable {
     private Function createFunctionFromString(Button btn, String tfString, ArrayList<String> tmpDecisionVars) {
         char[] tfArr = tfString.toCharArray();
         //znajdowanie zmiennych decyzyjnych postaci xLICZBA
-        for(int i = 0; i < tfArr.length; i++){
-            System.out.println(tfArr[i]);
-            if(tfArr[i] == 'x'){
+        for(int i = 0; i < tfString.length(); i++){
+            System.out.println(tfString.charAt(i));
+            if(tfString.charAt(i) == 'x'){
                 String num = "";
-                if(i < tfArr.length - 1) {
-                    Character ch = tfArr[++i];
-                    System.out.print(ch);
-                    if (Character.isDigit(ch)) {
-                        num += ch;
-                        if(i < tfArr.length - 1) {
-                            while (Character.isDigit(tfArr[i+1])) {
-                                ch = tfArr[++i];
-                                System.out.print(ch);
-                                num += ch;
-                                if(i == tfArr.length - 1) break;
-                            }
-                        }
-                    }
-                    String decVar = "x" + num;
-                    System.out.println(decVar);
-                    if (!tmpDecisionVars.contains(decVar)) {
-                        tmpDecisionVars.add(decVar);
-                    }
-                    if (!decisionVars.contains(decVar)) {
-                        decisionVars.add(decVar);
-                    }
+                while ((++i < tfString.length()) && Character.isDigit(tfString.charAt(i)) ) {
+                    System.out.println("WTF " + (i < tfString.length()));
+                    System.out.println(tfString.charAt(i));
+                    num += tfString.charAt(i);
+                }
+
+                String decVar = "x" + num;
+                System.out.println(decVar);
+                if (!tmpDecisionVars.contains(decVar)) {
+                    tmpDecisionVars.add(decVar);
+                }
+                if (!decisionVars.contains(decVar)) {
+                    decisionVars.add(decVar);
                 }
             }
         }
