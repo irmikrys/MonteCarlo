@@ -178,6 +178,16 @@ public class QuestionaireController implements Initializable {
         Button submit = new Button("Submit"); //TODO: ustawić margines lewy
         submit.setDisable(true);
 
+        setTfLimListener(tfLim, submit);
+        setTfValListener(tfVal, submit);
+        setButtonFieldListener(bf);
+        setSubmitLimitListener(submit, tfLim, bf, tfVal);
+        addLimitToHBox(hBox, tfLim, bf, tfVal, submit);
+        limitsVBox.getChildren().add(hBox);
+    }
+
+    ////////////////////////////////////////
+    private void setTfLimListener(TextField tfLim, Button submit) {
         //TODO: ustaw listenera dla pola tekstowego z funkcja
         tfLim.textProperty().addListener((observable, oldValue, newValue) -> {
             String tfLimText = newValue;
@@ -185,8 +195,9 @@ public class QuestionaireController implements Initializable {
             isTfLimOk = true;
             if(isTfValOk && isTfLimOk) submit.setDisable(false);
         });
+    }
 
-        //ustaw listenera dla pola tekstowego z wartościa
+    private void setTfValListener(TextField tfVal, Button submit) {
         tfVal.textProperty().addListener((observable, oldValue, newValue)  -> {
             String text = tfVal.getText();
             double value;
@@ -198,58 +209,22 @@ public class QuestionaireController implements Initializable {
             }
             if(isTfValOk && isTfLimOk) submit.setDisable(false);
         });
+    }
 
-        //ustaw listenera dla buttona ButtonFields ze zmiana znaku
-        setButtonFieldListener(bf);
-        limitsButtons.add(bf); //zeby bylo wiadomo jaki znak byl dla danego warunku
+    private void setButtonFieldListener(ButtonFields bf) {
+        bf.setOnAction(event -> {
+            bf.setCounter(bf.getCounter() + 1);
+            bf.setText(signsArr.get(bf.getCounter()));
+        });
+    }
 
-        //ustaw listenera dla buttona zatwierdzajacego
+    private void setSubmitLimitListener(Button submit, TextField tfLim, ButtonFields bf, TextField tfVal) {
         submit.setOnAction(event -> {
             String tfString = tfLim.getText(); System.out.println(tfString);
-            //sprawdzanie liczby zmiennych decyzyjnych
             ArrayList<String> tmpDecisionVars = new ArrayList<>();
-            int decisionVarCounter = 0;
-            char[] tfArr = tfString.toCharArray();
-            for(int i = 0; i < tfArr.length; i++){
-                System.out.println(tfArr[i]);
-                if(tfArr[i] == 'x'){
-                    String num = "";
-                    if(i < tfArr.length - 1) {
-                        Character ch = tfArr[++i];
-                        System.out.print(ch);
-                        if (Character.isDigit(ch)) {
-                            num += ch;
-                            if(i < tfArr.length - 1) {
-                                while (Character.isDigit(tfArr[i+1])) {
-                                    ch = tfArr[++i];
-                                    System.out.print(ch);
-                                    num += ch;
-                                    if(i == tfArr.length - 1) break;
-                                }
-                            }
-                        }
-                        String decVar = "x" + num;
-                        System.out.println(decVar);
-                        if (!tmpDecisionVars.contains(decVar)) {
-                            tmpDecisionVars.add(decVar);
-                        }
-                        if (!decisionVars.contains(decVar)) {
-                            decisionVars.add(decVar);
-                        }
-                    }
-                }
-            }
-            decisionVarCounter = tmpDecisionVars.size();
-            String fcnString = "f(";
-            for(int i = 0; i < decisionVarCounter; i++){
-                fcnString = fcnString + tmpDecisionVars.get(i);
-              if(i != decisionVarCounter - 1) {
-                  fcnString += ", ";
-              }
-            }
-            fcnString += ") = " + tfString;
-            System.out.println(fcnString);
-            Function f = new Function(fcnString);
+
+            Function f = createFunctionFromString(submit, tfString, tmpDecisionVars);
+
             if(f.checkSyntax()) {
                 functions.add(f);
                 lblErrors.setText(((Double) f.calculate(8.5, 2, 1)).toString());
@@ -260,28 +235,64 @@ public class QuestionaireController implements Initializable {
                 btnAddLimit.setDisable(!isAddReleased);
             }
             else {
-                lblErrors.setText("Syntax error while parsing function...");
+                lblErrors.setText("Syntax error while parsing function..."); //never
             }
-        });
 
-        //dodaj wszystkie komponenty do hboxa
+        });
+    }
+
+    private void addLimitToHBox(HBox hBox, TextField tfLim, ButtonFields bf, TextField tfVal, Button submit){
         hBox.getChildren().add(tfLim);
         hBox.getChildren().add(bf);
         hBox.getChildren().add(tfVal);
         hBox.getChildren().add(submit);
-        //dodaj hboxa do vboxa
-        limitsVBox.getChildren().add(hBox);
     }
-
     ////////////////////////////////////////
-    private void setButtonFieldListener(ButtonFields bf) {
-        bf.setOnAction(event -> {
-            bf.setCounter(bf.getCounter() + 1);
-            bf.setText(signsArr.get(bf.getCounter()));
-        });
-    }
-    private void createFunctionFromString(Button btn, String ex) {
-
+    private Function createFunctionFromString(Button btn, String tfString, ArrayList<String> tmpDecisionVars) {
+        char[] tfArr = tfString.toCharArray();
+        //znajdowanie zmiennych decyzyjnych postaci xLICZBA
+        for(int i = 0; i < tfArr.length; i++){
+            System.out.println(tfArr[i]);
+            if(tfArr[i] == 'x'){
+                String num = "";
+                if(i < tfArr.length - 1) {
+                    Character ch = tfArr[++i];
+                    System.out.print(ch);
+                    if (Character.isDigit(ch)) {
+                        num += ch;
+                        if(i < tfArr.length - 1) {
+                            while (Character.isDigit(tfArr[i+1])) {
+                                ch = tfArr[++i];
+                                System.out.print(ch);
+                                num += ch;
+                                if(i == tfArr.length - 1) break;
+                            }
+                        }
+                    }
+                    String decVar = "x" + num;
+                    System.out.println(decVar);
+                    if (!tmpDecisionVars.contains(decVar)) {
+                        tmpDecisionVars.add(decVar);
+                    }
+                    if (!decisionVars.contains(decVar)) {
+                        decisionVars.add(decVar);
+                    }
+                }
+            }
+        }
+        int decisionVarCounter = tmpDecisionVars.size();
+        String fcnString = "f(";
+        //odtworzenie argumentow funkcji
+        for(int i = 0; i < decisionVarCounter; i++){
+            fcnString = fcnString + tmpDecisionVars.get(i);
+            if(i != decisionVarCounter - 1) {
+                fcnString += ", ";
+            }
+        }
+        fcnString += ") = " + tfString;
+        System.out.println(fcnString);
+        Function f = new Function(fcnString);
+        return f;
     }
     ////////////////////////////////////////
 
