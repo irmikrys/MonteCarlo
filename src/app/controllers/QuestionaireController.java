@@ -1,9 +1,6 @@
 package app.controllers;
 
-import app.ActionsHandler;
-import app.Algo;
-import app.ButtonFields;
-import app.Main;
+import app.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -30,6 +27,7 @@ public class QuestionaireController implements Initializable {
     private ArrayList<ButtonFields> limitsButtons= new ArrayList<>();
     private ArrayList<Function> functions = new ArrayList<>();
     private ArrayList<String> decisionVars = new ArrayList<>();
+    private ArrayList<LimitField> limits = new ArrayList<>();
     private boolean isAddReleased = true;
     private boolean isTfLimOk;
     private boolean isTfValOk;
@@ -226,13 +224,22 @@ public class QuestionaireController implements Initializable {
             Function f = createFunctionFromString(submit, tfString, tmpDecisionVars);
 
             if(f.checkSyntax()) {
-                functions.add(f);
+                LimitField limit = new LimitField(
+                        f, signsArr.get(bf.getCounter()), Double.parseDouble(tfVal.getText()), tmpDecisionVars
+                );
+                System.out.println(limit.toString());
+                limits.add(limit);
+                for (String tmpDecisionVar : tmpDecisionVars) {
+                    if (!decisionVars.contains(tmpDecisionVar)) {
+                        decisionVars.add(tmpDecisionVar);
+                    }
+                }
                 lblErrors.setText(((Double) f.calculate(8.5, 2, 1)).toString());
                 Label lbl = new Label(tfString + " " + bf.getText() + " " + tfVal.getText());
                 limitsVBox.getChildren().remove(limitsCounter - 1);
                 limitsVBox.getChildren().add(limitsCounter - 1, lbl);
+                btnAddLimit.setDisable(isAddReleased);
                 isAddReleased = true;
-                btnAddLimit.setDisable(!isAddReleased);
             }
             else {
                 lblErrors.setText("Syntax error while parsing function..."); //never
@@ -263,9 +270,6 @@ public class QuestionaireController implements Initializable {
                 System.out.println(decVar);
                 if (!tmpDecisionVars.contains(decVar)) {
                     tmpDecisionVars.add(decVar);
-                }
-                if (!decisionVars.contains(decVar)) {
-                    decisionVars.add(decVar);
                 }
             }
         }

@@ -13,14 +13,20 @@ public class LimitField {
     public Double val;
     public ArrayList<String> vars = new ArrayList<>();
 
-    LimitField(){
+    public LimitField(){
 
     }
 
-    LimitField(Function fcn, String sign, Double val, ArrayList<String> vars) {
+    public LimitField(Function fcn, String sign, Double val, ArrayList<String> vars) {
         this.fcn = fcn;
         this.sign = sign;
         this.val = val;
         this.vars = vars;
+    }
+
+    public String toString(){
+        return "\nFunction: " + this.fcn.getFunctionExpressionString() +
+                ", Sign : " + this.sign + ", Value: " +
+                this.val + ", DecVars: "+ vars.toString();
     }
 }
