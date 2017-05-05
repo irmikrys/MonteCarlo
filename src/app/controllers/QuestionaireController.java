@@ -69,6 +69,7 @@ public class QuestionaireController implements Initializable {
         setMaxCheckListener();
         setMinCheckListener();
         setLabelsOnStart();
+        setTfFcnOk();
         Algo.epsilon = Double.parseDouble(lblEpsVal.getText());
     }
 
@@ -254,7 +255,9 @@ public class QuestionaireController implements Initializable {
         hBox.getChildren().add(tfVal);
         hBox.getChildren().add(submit);
     }
+
     ////////////////////////////////////////
+
     private Function createFunctionFromString(Button btn, String tfString, ArrayList<String> tmpDecisionVars) {
         //znajdowanie zmiennych decyzyjnych postaci xLICZBA
         for(int i = 0; i < tfString.length(); i++){
@@ -287,11 +290,27 @@ public class QuestionaireController implements Initializable {
         Function f = new Function(fcnString);
         return f;
     }
+
     ////////////////////////////////////////
 
     @FXML
     public void submitFcn(ActionEvent e) {
-        lblErrors.setText("Action submit function not implemented...");
+        lblErrors.setText("Action submit function not fully implemented...");
+
+        btnAddLimit.setDisable(true);
+        ArrayList<String> targetDecisionVars = new ArrayList<>();
+        Function targetFcn = createFunctionFromString(btnSubmitFcn, tfFunction.getText(), targetDecisionVars);
+
+        for(String var: decisionVars){
+            if(!targetDecisionVars.contains(var)){
+                lblErrors.setText("Target function doesn't contain all limited decision variables!");
+                btnAddLimit.setDisable(false);
+                return;
+            }
+        }
+
+        btnAddLimit.setDisable(true);
+        Algo.targetFcn = targetFcn;
     }
 
     @FXML
@@ -358,6 +377,12 @@ public class QuestionaireController implements Initializable {
         lblEpsVal.setText("0.1");
         lblFcn.setText("");
         lblResult.setText("Click Compute button to see result.");
+    }
+
+    private void setTfFcnOk(){
+        tfFunction.textProperty().addListener(((observable, oldValue, newValue) -> {
+            lblErrors.setText("tfFcn has no change listener...");
+        }));
     }
 
     ////////////////////////////////

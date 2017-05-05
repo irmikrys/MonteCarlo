@@ -8,4 +8,5 @@ import org.mariuszgromada.math.mxparser.Function;
 public class Algo {
     public static double epsilon;
     public static Function targetFcn;
+    public static String maxMinTarget;
 }
