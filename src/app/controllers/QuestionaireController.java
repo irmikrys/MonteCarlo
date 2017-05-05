@@ -28,6 +28,7 @@ public class QuestionaireController implements Initializable {
     private ArrayList<String> signsArr = new ArrayList<>(Arrays.asList("<", "<=", ">", ">="));
     private ArrayList<ButtonFields> limitsButtons= new ArrayList<>();
     private ArrayList<Function> functions = new ArrayList<>();
+    private ArrayList<String> decisionVars = new ArrayList<>();
     private boolean isAddReleased = true;
     private boolean isTfLimOk;
     private boolean isTfValOk;
@@ -154,8 +155,13 @@ public class QuestionaireController implements Initializable {
 
     @FXML
     public void addLimit(ActionEvent e) {
+        isTfValOk = false;
+        isTfLimOk = false;
+        lblErrors.setText("");
         isAddReleased = false;
         btnAddLimit.setDisable(!isAddReleased);
+        limitsCounter = limitsCounter + 1;
+
         //utworz hbox
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER);
@@ -164,13 +170,10 @@ public class QuestionaireController implements Initializable {
 
         //utworz komponenty potrzebne do hboxa
         TextField tfLim = new TextField();
-
         ButtonFields bf = new ButtonFields();
         bf.setText(signsArr.get(bf.getCounter()));
-
         TextField tfVal = new TextField();
         tfVal.setPrefWidth(60);
-
         Button submit = new Button("Submit"); //TODO: ustawić margines lewy
         submit.setDisable(true);
 
@@ -187,11 +190,9 @@ public class QuestionaireController implements Initializable {
             if(text.matches("^[0-9]+\\.?[0-9]*$")) {
                 value = Double.parseDouble(tfVal.getText());
                 isTfValOk = true;
-            }
-            else {
+            } else {
                 isTfValOk = false;
             }
-
             if(isTfValOk && isTfLimOk) submit.setDisable(false);
         });
 
@@ -204,10 +205,61 @@ public class QuestionaireController implements Initializable {
 
         //ustaw listenera dla buttona zatwierdzajacego
         submit.setOnAction(event -> {
-            String fcnString = tfLim.getText();
+            String tfString = tfLim.getText(); System.out.println(tfString);
+            //sprawdzanie liczby zmiennych decyzyjnych
+            ArrayList<String> tmpDecisionVars = new ArrayList<>();
+            int decisionVarCounter = 0;
+            char[] tfArr = tfString.toCharArray();
+            for(int i = 0; i < tfArr.length; i++){
+                System.out.println(tfArr[i]);
+                if(tfArr[i] == 'x'){
+                    String num = "";
+                    if(i < tfArr.length - 1) {
+                        Character ch = tfArr[++i];
+                        System.out.print(ch);
+                        if (Character.isDigit(ch)) {
+                            num += ch;
+                            if(i < tfArr.length - 1) {
+                                while (Character.isDigit(tfArr[i+1])) {
+                                    ch = tfArr[++i];
+                                    System.out.print(ch);
+                                    num += ch;
+                                    if(i == tfArr.length - 1) break;
+                                }
+                            }
+                        }
+                        String decVar = "x" + num;
+                        System.out.println(decVar);
+                        if (!tmpDecisionVars.contains(decVar)) {
+                            tmpDecisionVars.add(decVar);
+                        }
+                        if (!decisionVars.contains(decVar)) {
+                            decisionVars.add(decVar);
+                        }
+                    }
+                }
+            }
+            decisionVarCounter = tmpDecisionVars.size();
+            String fcnString = "f(";
+            for(int i = 0; i < decisionVarCounter; i++){
+              //fcnString = fcnString + "x" + (i + 1);
+                fcnString = fcnString + tmpDecisionVars.get(i);
+              if(i != decisionVarCounter - 1) {
+                  fcnString += ", ";
+              }
+            }
+            fcnString += ") = " + tfString;
+            System.out.println(fcnString);
             Function f = new Function(fcnString);
-            Label lbl = new Label((limitsCounter + 1) + ". " + fcnString + bf.getText() + tfVal.getText());
+            functions.add(f);
+            lblErrors.setText(((Double) f.calculate(8.5, 2, 1)).toString());
+            Label lbl = new Label(limitsCounter + ")  " + tfString + " " + bf.getText() + " " + tfVal.getText());
+            limitsVBox.getChildren().remove(limitsCounter - 1);
+            limitsVBox.getChildren().add(limitsCounter - 1, lbl);
+            isAddReleased = true;
+            btnAddLimit.setDisable(!isAddReleased);
         });
+
         //dodaj wszystkie komponenty do hboxa
         hBox.getChildren().add(tfLim);
         hBox.getChildren().add(bf);
@@ -215,8 +267,6 @@ public class QuestionaireController implements Initializable {
         hBox.getChildren().add(submit);
         //dodaj hboxa do vboxa
         limitsVBox.getChildren().add(hBox);
-
-        limitsCounter = limitsCounter + 1;
     }
 
     @FXML

@@ -57,7 +57,7 @@
                                                       <Insets top="15.0" />
                                                    </VBox.margin>
                                                 </HBox>
-                                                <VBox fx:id="limitsVBox" spacing="10.0">
+                                                <VBox fx:id="limitsVBox" alignment="CENTER" spacing="10.0">
                                                    <VBox.margin>
                                                       <Insets left="15.0" right="15.0" />
                                                    </VBox.margin></VBox>
