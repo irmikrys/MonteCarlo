@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import org.apache.commons.lang3.StringUtils;
+import org.mariuszgromada.math.mxparser.Expression;
 import org.mariuszgromada.math.mxparser.Function;
 
 import java.io.IOException;
@@ -179,6 +180,8 @@ public class QuestionaireController implements Initializable {
 
         //TODO: ustaw listenera dla pola tekstowego z funkcja
         tfLim.textProperty().addListener((observable, oldValue, newValue) -> {
+            String tfLimText = newValue;
+            Expression ex = new Expression(tfLimText);
             isTfLimOk = true;
             if(isTfValOk && isTfLimOk) submit.setDisable(false);
         });
@@ -197,11 +200,8 @@ public class QuestionaireController implements Initializable {
         });
 
         //ustaw listenera dla buttona ButtonFields ze zmiana znaku
-        bf.setOnAction(event -> {
-            bf.setCounter(bf.getCounter() + 1);
-            bf.setText(signsArr.get(bf.getCounter()));
-        });
-        limitsButtons.add(bf);
+        setButtonFieldListener(bf);
+        limitsButtons.add(bf); //zeby bylo wiadomo jaki znak byl dla danego warunku
 
         //ustaw listenera dla buttona zatwierdzajacego
         submit.setOnAction(event -> {
@@ -242,7 +242,6 @@ public class QuestionaireController implements Initializable {
             decisionVarCounter = tmpDecisionVars.size();
             String fcnString = "f(";
             for(int i = 0; i < decisionVarCounter; i++){
-              //fcnString = fcnString + "x" + (i + 1);
                 fcnString = fcnString + tmpDecisionVars.get(i);
               if(i != decisionVarCounter - 1) {
                   fcnString += ", ";
@@ -251,13 +250,18 @@ public class QuestionaireController implements Initializable {
             fcnString += ") = " + tfString;
             System.out.println(fcnString);
             Function f = new Function(fcnString);
-            functions.add(f);
-            lblErrors.setText(((Double) f.calculate(8.5, 2, 1)).toString());
-            Label lbl = new Label(limitsCounter + ")  " + tfString + " " + bf.getText() + " " + tfVal.getText());
-            limitsVBox.getChildren().remove(limitsCounter - 1);
-            limitsVBox.getChildren().add(limitsCounter - 1, lbl);
-            isAddReleased = true;
-            btnAddLimit.setDisable(!isAddReleased);
+            if(f.checkSyntax()) {
+                functions.add(f);
+                lblErrors.setText(((Double) f.calculate(8.5, 2, 1)).toString());
+                Label lbl = new Label(tfString + " " + bf.getText() + " " + tfVal.getText());
+                limitsVBox.getChildren().remove(limitsCounter - 1);
+                limitsVBox.getChildren().add(limitsCounter - 1, lbl);
+                isAddReleased = true;
+                btnAddLimit.setDisable(!isAddReleased);
+            }
+            else {
+                lblErrors.setText("Syntax error while parsing function...");
+            }
         });
 
         //dodaj wszystkie komponenty do hboxa
@@ -268,6 +272,18 @@ public class QuestionaireController implements Initializable {
         //dodaj hboxa do vboxa
         limitsVBox.getChildren().add(hBox);
     }
+
+    ////////////////////////////////////////
+    private void setButtonFieldListener(ButtonFields bf) {
+        bf.setOnAction(event -> {
+            bf.setCounter(bf.getCounter() + 1);
+            bf.setText(signsArr.get(bf.getCounter()));
+        });
+    }
+    private void createFunctionFromString(Button btn, String ex) {
+
+    }
+    ////////////////////////////////////////
 
     @FXML
     public void submitFcn(ActionEvent e) {
