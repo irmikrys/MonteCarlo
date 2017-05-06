@@ -190,9 +190,23 @@ public class QuestionaireController implements Initializable {
         //TODO: ustaw listenera dla pola tekstowego z funkcja
         tfLim.textProperty().addListener((observable, oldValue, newValue) -> {
             String tfLimText = newValue;
+
+            if(!QuestionaireController.nonPolyEnabled) {
+                if(tfLimText.matches(
+                        "^[\\-]?([0-9]+\\.?[0-9]*[*])?[x][0-9]*(\\^[0-9]+)?([+-]?(?:(?:\\d+x\\^\\d+)|(?:\\d+x)|(?:\\d+)|(?:x)))*$")
+                        ) {
+                    isTfLimOk = true;
+                } else {
+                    isTfLimOk = false;
+                }
+            }
+            else {
+                isTfLimOk = true;
+            }
+
             Expression ex = new Expression(tfLimText);
-            isTfLimOk = true;
             if(isTfValOk && isTfLimOk) submit.setDisable(false);
+            else submit.setDisable(true);
         });
     }
 
@@ -207,6 +221,7 @@ public class QuestionaireController implements Initializable {
                 isTfValOk = false;
             }
             if(isTfValOk && isTfLimOk) submit.setDisable(false);
+            else submit.setDisable(true);
         });
     }
 
