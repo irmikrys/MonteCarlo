@@ -103,7 +103,7 @@ public class QuestionaireController implements Initializable {
     private void setTfFunctionListener(){
         tfFunction.textProperty().addListener((observable, oldValue, newValue) -> {
             isTfFcnOk = checkExpressionField(newValue);
-            if(isTfValOk && isTfLimOk) btnSubmitFcn.setDisable(false);
+            if(isTfFcnOk) btnSubmitFcn.setDisable(false);
             else btnSubmitFcn.setDisable(true);
         });
     }
