@@ -338,7 +338,7 @@ public class QuestionaireController implements Initializable {
     private void checkExpressionField(boolean ok, String tfText){
         if(!QuestionaireController.nonPolyEnabled) {
             if(tfText.matches(
-                    "^[\\-]?([0-9]+\\.?[0-9]*[*])?[x][0-9]*(\\^[0-9]+)?([+-]?(?:(?:\\d+x\\^\\d+)|(?:\\d+x)|(?:\\d+)|(?:x)))*$")
+                    "^[\\-]?([0-9]+\\.?[0-9]*[*])?[x][0-9]*(\\^[0-9]+)?([+-]((\\d+x[0-9]*\\^\\d+)?|(\\d+x[0-9]*)?|(\\d+)?|(?:x[0-9]*))?)*$")
                     ) {
                 ok = true;
             } else {
