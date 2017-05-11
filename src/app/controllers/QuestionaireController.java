@@ -10,7 +10,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import org.apache.commons.lang3.StringUtils;
-import org.mariuszgromada.math.mxparser.Expression;
 import org.mariuszgromada.math.mxparser.Function;
 
 import java.io.IOException;
@@ -103,7 +102,7 @@ public class QuestionaireController implements Initializable {
 
     private void setTfFunctionListener(){
         tfFunction.textProperty().addListener((observable, oldValue, newValue) -> {
-            checkExpressionField(isTfFcnOk, newValue);
+            isTfFcnOk = checkExpressionField(newValue);
             if(isTfValOk && isTfLimOk) btnSubmitFcn.setDisable(false);
             else btnSubmitFcn.setDisable(true);
         });
@@ -248,10 +247,13 @@ public class QuestionaireController implements Initializable {
     ////////////////////////////////////////
     private void setTfLimListener(TextField tfLim, Button submit) {
         tfLim.textProperty().addListener((observable, oldValue, newValue) -> {
-            checkExpressionField(isTfLimOk, newValue);
-            Expression ex = new Expression(newValue);
-            if(isTfValOk && isTfLimOk) submit.setDisable(false);
+            isTfLimOk = checkExpressionField(newValue);
+            System.out.println(isTfValOk && isTfLimOk);
+            if(isTfValOk && isTfLimOk) {
+                submit.setDisable(false);
+            }
             else submit.setDisable(true);
+            System.out.println(isTfLimOk&&isTfValOk);
         });
     }
 
@@ -282,7 +284,7 @@ public class QuestionaireController implements Initializable {
             String tfString = tfLim.getText(); System.out.println(tfString);
             ArrayList<String> tmpDecisionVars = new ArrayList<>();
 
-            Function f = createFunctionFromString(submit, tfString, tmpDecisionVars);
+            Function f = createFunctionFromString(tfString, tmpDecisionVars);
 
             if(f.checkSyntax()) {
                 LimitField limit = new LimitField(
@@ -335,22 +337,23 @@ public class QuestionaireController implements Initializable {
     ////////////////////////////////////////
 
     //TODO: dodać przypadek gdy dowolna funkcja, nie tylko wielomiany
-    private void checkExpressionField(boolean ok, String tfText){
+    private boolean checkExpressionField(String tfText){
         if(!QuestionaireController.nonPolyEnabled) {
             if(tfText.matches(
-                    "^[\\-]?([0-9]+\\.?[0-9]*[*])?[x][0-9]*(\\^[0-9]+)?([+-]((\\d+x[0-9]*\\^\\d+)?|(\\d+x[0-9]*)?|(\\d+)?|(?:x[0-9]*))?)*$")
+                    "^[-]?([0-9]+\\.?[0-9]*[*])?[x][0-9]*(\\^[0-9]+)?" +
+                            "([+-]([0-9]+\\.?[0-9]*[*])?[x][0-9]*(\\^[0-9]+)?)*$")
                     ) {
-                ok = true;
+                return true;
             } else {
-                ok = false;
+                return  false;
             }
         }
         else {
-            ok = true;
+            return true;
         }
     }
 
-    private Function createFunctionFromString(Button btn, String tfString, ArrayList<String> tmpDecisionVars) {
+    private Function createFunctionFromString(String tfString, ArrayList<String> tmpDecisionVars) {
         //znajdowanie zmiennych decyzyjnych postaci xLICZBA
         for(int i = 0; i < tfString.length(); i++){
             System.out.println(tfString.charAt(i));
@@ -391,7 +394,7 @@ public class QuestionaireController implements Initializable {
 
         btnAddLimit.setDisable(true);
         ArrayList<String> targetDecisionVars = new ArrayList<>();
-        Function targetFcn = createFunctionFromString(btnSubmitFcn, tfFunction.getText(), targetDecisionVars);
+        Function targetFcn = createFunctionFromString(tfFunction.getText(), targetDecisionVars);
         isTfFcnOk = targetFcn.checkSyntax();
 
         for(String var: decisionVars){
