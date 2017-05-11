@@ -25,7 +25,7 @@ public class LimitField {
     }
 
     public String toString(){
-        return "\nFunction: " + this.fcn.getFunctionExpressionString() +
+        return "\nExpression: " + this.fcn.getFunctionExpressionString() +
                 ", Sign : " + this.sign + ", Value: " +
                 this.val + ", DecVars: "+ vars.toString();
     }
