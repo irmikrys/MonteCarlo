@@ -28,7 +28,6 @@ public class QuestionaireController implements Initializable {
     static boolean nonPolyEnabled;
     private ArrayList<String> signsArr = new ArrayList<>(Arrays.asList("<", "<=", ">", ">="));
     private ArrayList<String> decisionVars = new ArrayList<>();
-    private ArrayList<LimitField> limits = new ArrayList<>();
     private boolean isAddReleased = true;
     private boolean isTfLimOk;
     private boolean isTfValOk;
@@ -291,7 +290,7 @@ public class QuestionaireController implements Initializable {
                         f, signsArr.get(bf.getCounter()), Double.parseDouble(tfVal.getText()), tmpDecisionVars
                 );
                 System.out.println(limit.toString());
-                limits.add(limit);
+                Algo.limits.add(limit);
                 for (String tmpDecisionVar : tmpDecisionVars) {
                     if (!decisionVars.contains(tmpDecisionVar)) {
                         decisionVars.add(tmpDecisionVar);
