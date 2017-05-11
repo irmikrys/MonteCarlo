@@ -53,6 +53,7 @@
                                                    <children>
                                                       <Label text="Limitations: " />
                                                       <Button fx:id="btnAddLimit" mnemonicParsing="false" onAction="#addLimit" text="Add" />
+                                                      <Button fx:id="btnSubmitAllLims" mnemonicParsing="false" onAction="#submitAllLimits" text="Submit All" />
                                                    </children>
                                                    <VBox.margin>
                                                       <Insets top="15.0" />
@@ -66,7 +67,10 @@
                                                    <children>
                                                       <Label text="Function: " />
                                                       <TextField fx:id="tfFunction" />
-                                                      <Button fx:id="btnSubmitFcn" mnemonicParsing="false" onAction="#submitFcn" text="Submit" />
+                                                      <Button fx:id="btnSubmitFcn" mnemonicParsing="false" onAction="#submitFcn" text="Submit">
+                                                         <tooltip>
+                                                            <Tooltip text="You have to submit all limits first..." />
+                                                         </tooltip></Button>
                                                    </children>
                                                    <VBox.margin>
                                                       <Insets bottom="15.0" top="15.0" />

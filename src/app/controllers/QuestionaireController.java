@@ -20,12 +20,14 @@ import java.util.*;
 /**
  * Created on 29.04.2017.
  */
+//TODO: sprawdzanie ograniczen gornych i dolnych dla wszystkich zmiennych decyzyjnych
+//TODO: sprawdzanie przypadku dowolnej funkcji, nie tylko wielomianu
+//TODO: reset wszystkiego przy przejściu do menu/tworzeniu nowego problemu
+
 public class QuestionaireController implements Initializable {
 
     static boolean nonPolyEnabled;
     private ArrayList<String> signsArr = new ArrayList<>(Arrays.asList("<", "<=", ">", ">="));
-    private ArrayList<ButtonFields> limitsButtons= new ArrayList<>();
-    private ArrayList<Function> functions = new ArrayList<>();
     private ArrayList<String> decisionVars = new ArrayList<>();
     private ArrayList<LimitField> limits = new ArrayList<>();
     private boolean isAddReleased = true;
@@ -40,6 +42,7 @@ public class QuestionaireController implements Initializable {
     @FXML public VBox limitsVBox;
 
     @FXML public Button btnAddLimit;
+    @FXML public Button btnSubmitAllLims;
     @FXML public Button btnSubmitFcn;
     @FXML public Button btnSetEps;
     @FXML public Button btnCompute;
@@ -68,10 +71,67 @@ public class QuestionaireController implements Initializable {
         }
         setMaxCheckListener();
         setMinCheckListener();
+        setTfFunctionListener();
         setLabelsOnStart();
-        setTfFcnOk();
+        btnSubmitAllLims.setDisable(true);
+        btnSubmitFcn.setDisable(true);
+        tfFunction.setDisable(true);
         Algo.epsilon = Double.parseDouble(lblEpsVal.getText());
     }
+
+    ////////////////////////////////////
+
+    private void setCmiEnPolyListener(){
+        cmiEnPoly.selectedProperty().addListener((ov, old_val, new_val) -> {
+            if(cmiEnPoly.isSelected()){
+                QuestionaireController.nonPolyEnabled = true;
+                System.out.println("Non-poly enabled cmi");
+            } else {
+                QuestionaireController.nonPolyEnabled = false;
+                System.out.println("Non-poly disabled cmi");
+            }
+        });
+    }
+
+    private void setMaxCheckListener() {
+        excludeDoubleCheck(maximizeCheck, minimizeCheck);
+    }
+
+    private void setMinCheckListener() {
+        excludeDoubleCheck(minimizeCheck, maximizeCheck);
+    }
+
+    private void setTfFunctionListener(){
+        tfFunction.textProperty().addListener((observable, oldValue, newValue) -> {
+            checkExpressionField(isTfFcnOk, newValue);
+            if(isTfValOk && isTfLimOk) btnSubmitFcn.setDisable(false);
+            else btnSubmitFcn.setDisable(true);
+        });
+    }
+
+    private void setLabelsOnStart() {
+        lblErrors.setText("");
+        lblEpsVal.setText("0.1");
+        lblFcn.setText("");
+        lblResult.setText("Click Compute button to see result.");
+    }
+
+    ////////////////////////////////////
+
+    private void excludeDoubleCheck(CheckBox first, CheckBox second){
+        first.selectedProperty().addListener((ov, old_val, new_val) -> {
+            if(second.isSelected()){
+                if(first.isSelected()){
+                    second.setSelected(false);
+                }
+                else{
+                    second.setSelected(true);
+                }
+            }
+        });
+    }
+
+    ////////////////////////////////////
 
     @FXML
     public void closeAction(ActionEvent e) {
@@ -187,24 +247,9 @@ public class QuestionaireController implements Initializable {
 
     ////////////////////////////////////////
     private void setTfLimListener(TextField tfLim, Button submit) {
-        //TODO: ustaw listenera dla pola tekstowego z funkcja
         tfLim.textProperty().addListener((observable, oldValue, newValue) -> {
-            String tfLimText = newValue;
-
-            if(!QuestionaireController.nonPolyEnabled) {
-                if(tfLimText.matches(
-                        "^[\\-]?([0-9]+\\.?[0-9]*[*])?[x][0-9]*(\\^[0-9]+)?([+-]?(?:(?:\\d+x\\^\\d+)|(?:\\d+x)|(?:\\d+)|(?:x)))*$")
-                        ) {
-                    isTfLimOk = true;
-                } else {
-                    isTfLimOk = false;
-                }
-            }
-            else {
-                isTfLimOk = true;
-            }
-
-            Expression ex = new Expression(tfLimText);
+            checkExpressionField(isTfLimOk, newValue);
+            Expression ex = new Expression(newValue);
             if(isTfValOk && isTfLimOk) submit.setDisable(false);
             else submit.setDisable(true);
         });
@@ -256,6 +301,9 @@ public class QuestionaireController implements Initializable {
                 limitsVBox.getChildren().add(limitsCounter - 1, lbl);
                 btnAddLimit.setDisable(isAddReleased);
                 isAddReleased = true;
+                if(limitsCounter > 0) {
+                    btnSubmitAllLims.setDisable(false);
+                }
             }
             else {
                 lblErrors.setText("Syntax error while parsing function..."); //never
@@ -272,6 +320,35 @@ public class QuestionaireController implements Initializable {
     }
 
     ////////////////////////////////////////
+
+    @FXML
+    public void submitAllLimits(ActionEvent e) {
+        lblErrors.setText("Submit all limits not fully implemented...");
+        //if(nieWszystkieZmienneMajaOgraniczenieGorneIDolne){
+        //    komunikat ze musi dodać wszystkie ogarniczenia
+        //}else{
+        btnAddLimit.setDisable(true);
+        btnSubmitAllLims.setDisable(true);
+        tfFunction.setDisable(false);
+    }
+
+    ////////////////////////////////////////
+
+    //TODO: dodać przypadek gdy dowolna funkcja, nie tylko wielomiany
+    private void checkExpressionField(boolean ok, String tfText){
+        if(!QuestionaireController.nonPolyEnabled) {
+            if(tfText.matches(
+                    "^[\\-]?([0-9]+\\.?[0-9]*[*])?[x][0-9]*(\\^[0-9]+)?([+-]?(?:(?:\\d+x\\^\\d+)|(?:\\d+x)|(?:\\d+)|(?:x)))*$")
+                    ) {
+                ok = true;
+            } else {
+                ok = false;
+            }
+        }
+        else {
+            ok = true;
+        }
+    }
 
     private Function createFunctionFromString(Button btn, String tfString, ArrayList<String> tmpDecisionVars) {
         //znajdowanie zmiennych decyzyjnych postaci xLICZBA
@@ -315,6 +392,7 @@ public class QuestionaireController implements Initializable {
         btnAddLimit.setDisable(true);
         ArrayList<String> targetDecisionVars = new ArrayList<>();
         Function targetFcn = createFunctionFromString(btnSubmitFcn, tfFunction.getText(), targetDecisionVars);
+        isTfFcnOk = targetFcn.checkSyntax();
 
         for(String var: decisionVars){
             if(!targetDecisionVars.contains(var)){
@@ -323,8 +401,6 @@ public class QuestionaireController implements Initializable {
                 return;
             }
         }
-
-        btnAddLimit.setDisable(true);
         Algo.targetFcn = targetFcn;
     }
 
@@ -362,58 +438,10 @@ public class QuestionaireController implements Initializable {
 
     @FXML
     public void computeResult(ActionEvent e) {
-        lblErrors.setText("Action compute not implemented...");
+        lblResult.setText("Action compute not implemented...");
     }
 
     /////////////////////////////////////
-
-    private void setCmiEnPolyListener(){
-        cmiEnPoly.selectedProperty().addListener((ov, old_val, new_val) -> {
-            if(cmiEnPoly.isSelected()){
-                QuestionaireController.nonPolyEnabled = true;
-                System.out.println("Non-poly enabled cmi");
-            } else {
-                QuestionaireController.nonPolyEnabled = false;
-                System.out.println("Non-poly disabled cmi");
-            }
-        });
-    }
-
-    private void setMaxCheckListener() {
-        excludeDoubleCheck(maximizeCheck, minimizeCheck);
-    }
-
-    private void setMinCheckListener() {
-        excludeDoubleCheck(minimizeCheck, maximizeCheck);
-    }
-
-    private void setLabelsOnStart() {
-        lblErrors.setText("");
-        lblEpsVal.setText("0.1");
-        lblFcn.setText("");
-        lblResult.setText("Click Compute button to see result.");
-    }
-
-    private void setTfFcnOk(){
-        tfFunction.textProperty().addListener(((observable, oldValue, newValue) -> {
-            lblErrors.setText("tfFcn has no change listener...");
-        }));
-    }
-
-    ////////////////////////////////
-
-    private void excludeDoubleCheck(CheckBox first, CheckBox second){
-        first.selectedProperty().addListener((ov, old_val, new_val) -> {
-            if(second.isSelected()){
-                if(first.isSelected()){
-                    second.setSelected(false);
-                }
-                else{
-                    second.setSelected(true);
-                }
-            }
-        });
-    }
 
     private void printDialogNodes(Pane pane){
         List<Node> nodes = pane.getChildren();
@@ -423,4 +451,7 @@ public class QuestionaireController implements Initializable {
         }
         System.out.println();
     }
+
+    ////////////////////////////////
+
 }
