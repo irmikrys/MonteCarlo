@@ -49,12 +49,12 @@ public class Algo {
 
 
     /**
-     * Checks if all limits are satisfied
+     * Checks if all limits are satisfied by one range of coordinates
      * @param limitsNum - number of limits (limits.size)
      * @return - true if all limits are satisfied, false if any is not
      */
-    private static boolean checkLimits(int limitsNum) {
-        for(int i = 0; i < limitsNum; i++){
+    private static boolean checkLimits(int limitsNum, ArrayList<Double> coordinates) {
+        for(int i = 0; i < limitsNum; i++) {
             //check if condition is ok
             //if not ok any, false
         }
