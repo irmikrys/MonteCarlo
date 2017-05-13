@@ -27,7 +27,6 @@ public class QuestionaireController implements Initializable {
 
     static boolean nonPolyEnabled;
     private ArrayList<String> signsArr = new ArrayList<>(Arrays.asList("<", "<=", ">", ">="));
-    private ArrayList<String> decisionVars = new ArrayList<>();
     private boolean isAddReleased = true;
     private boolean isTfLimOk;
     private boolean isTfValOk;
@@ -292,8 +291,8 @@ public class QuestionaireController implements Initializable {
                 System.out.println(limit.toString());
                 Algo.limits.add(limit);
                 for (String tmpDecisionVar : tmpDecisionVars) {
-                    if (!decisionVars.contains(tmpDecisionVar)) {
-                        decisionVars.add(tmpDecisionVar);
+                    if (!Algo.decisionVars.contains(tmpDecisionVar)) {
+                        Algo.decisionVars.add(tmpDecisionVar);
                     }
                 }
                 lblErrors.setText(((Double) f.calculate(8.5, 2, 1)).toString());
@@ -396,7 +395,7 @@ public class QuestionaireController implements Initializable {
         Function targetFcn = createFunctionFromString(tfFunction.getText(), targetDecisionVars);
         isTfFcnOk = targetFcn.checkSyntax();
 
-        for(String var: decisionVars){
+        for(String var: Algo.decisionVars){
             if(!targetDecisionVars.contains(var)){
                 lblErrors.setText("Target function doesn't contain all limited decision variables!");
                 btnAddLimit.setDisable(false);
