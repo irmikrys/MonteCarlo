@@ -29,4 +29,57 @@ public class LimitField {
                 ", Sign : " + this.sign + ", Value: " +
                 this.value + ", DecVars: "+ vars.toString();
     }
+
+    public boolean checkConstraint(ArrayList<Double> coordinates, ArrayList<DecisionVar> decVars) {
+        System.out.println("\t" + this.toString());
+
+        int sizeTmp = this.vars.size();
+        double[] argsTmp = new double[sizeTmp];
+
+        //znajdz argumenty po nazwach w decisionVars i stworz tablice z kolejnymi wartosciami
+        for(int arg = 0; arg < sizeTmp; arg++) {
+            for (DecisionVar decisionVar : decVars) {
+                if (decisionVar.name.equals(this.vars.get(arg))) {
+                    argsTmp[arg] = decisionVar.value;
+                    System.out.println("\t\tValue of " + decisionVar.name + " set to: " + argsTmp[arg]);
+                }
+            }
+        }
+        //oblicz wartosc funkcji dla danego limitu
+        double v = this.function.calculate(argsTmp);
+        System.out.println("\tCalculated value: " + v);
+
+        //sprawdz jaki znak jest w tym polu i porownaj wartosc funkcji z wartoscia tfVal
+        switch(this.sign){
+            case "<":
+                System.out.println("\t\tSign: <");
+                if(!(v < this.value)){
+                    System.out.println("\t\tExpression: " + v + " < " + this.value + " is false." );
+                    return false;
+                }
+                break;
+            case "<=":
+                System.out.println("\t\tSign: <=");
+                if(!(v <= this.value)){
+                    System.out.println("\t\tExpression: " + v + " <= " + this.value + " is false." );
+                    return false;
+                }
+                break;
+            case ">":
+                System.out.println("\t\tSign: >");
+                if(!(v > this.value)){
+                    System.out.println("\t\tExpression: " + v + " > " + this.value + " is false." );
+                    return false;
+                }
+                break;
+            case ">=":
+                System.out.println("\t\tSign: >=");
+                if(!(v >= this.value)){
+                    System.out.println("\t\tExpression: " + v + " >= " + this.value + " is false." );
+                    return false;
+                }
+                break;
+        }
+        return true;
+    }
 }

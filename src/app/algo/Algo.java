@@ -39,59 +39,17 @@ public class Algo {
      * @return - true if all limits are satisfied, false if any is not
      */
     private static boolean checkConstraints(int limitsNum, ArrayList<Double> coordinates) {
-        System.out.println("\nChecking limits...");
+        System.out.println("\nChecking constraints...");
+
+        boolean satisfies = false;
 
         clearDecVarVals();
         setDecVarVals(coordinates);
 
         for(int i = 0; i < limitsNum; i++) {
             LimitField lfTmp = limits.get(i);
-            System.out.println("\t" + lfTmp.toString());
-            int sizeTmp = lfTmp.vars.size();
-            double[] argsTmp = new double[sizeTmp];
-            //znajdz argumenty po nazwach w decisionVars i stworz tablice z kolejnymi wartosciami
-            for(int arg = 0; arg < sizeTmp; arg++) {
-                for (DecisionVar decisionVar : decisionVars) {
-                    if (decisionVar.name.equals(lfTmp.vars.get(arg))) {
-                        argsTmp[arg] = decisionVar.value;
-                        System.out.println("\t\tValue of " + decisionVar.name + " set to: " + argsTmp[arg]);
-                    }
-                }
-            }
-            //oblicz wartosc funkcji dla danego limitu
-            double v = lfTmp.function.calculate(argsTmp);
-            System.out.println("\tCalculated value: " + v);
-            //sprawdz jaki znak jest w tym polu i porownaj wartosc funkcji z wartoscia tfVal
-            switch(lfTmp.sign){
-                case "<":
-                    System.out.println("\t\tSign: <");
-                    if(!(v < lfTmp.value)){
-                        System.out.println("\t\tExpression: " + v + " < " + lfTmp.value + " is false." );
-                        return false;
-                    }
-                    break;
-                case "<=":
-                    System.out.println("\t\tSign: <=");
-                    if(!(v <= lfTmp.value)){
-                        System.out.println("\t\tExpression: " + v + " <= " + lfTmp.value + " is false." );
-                        return false;
-                    }
-                    break;
-                case ">":
-                    System.out.println("\t\tSign: >");
-                    if(!(v > lfTmp.value)){
-                        System.out.println("\t\tExpression: " + v + " > " + lfTmp.value + " is false." );
-                        return false;
-                    }
-                    break;
-                case ">=":
-                    System.out.println("\t\tSign: >=");
-                    if(!(v >= lfTmp.value)){
-                        System.out.println("\t\tExpression: " + v + " >= " + lfTmp.value + " is false." );
-                        return false;
-                    }
-                    break;
-            }
+            satisfies = lfTmp.checkConstraint(coordinates, decisionVars);
+            if(!satisfies) return false;
         }
         return true;
     }
@@ -108,7 +66,6 @@ public class Algo {
         RandomArray randomArr = new RandomArray();
         ArrayList<ArrayList<Double>> firstSetOfPoints = new ArrayList<>(POINTS_NUM);
         ArrayList<ArrayList<Double>> setOfPoints = new ArrayList<>(POINTS_NUM);
-
 
         //MIN = najmniejsza wspolrzedna sposrod spelniajacyh punktow
         //MAX = najwieksza wspolrzedna sposrod spelniajacych punktow
