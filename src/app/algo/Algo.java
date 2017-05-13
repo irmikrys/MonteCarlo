@@ -10,8 +10,6 @@ import java.util.Random;
  */
 public class Algo {
 
-    private static double MIN = Double.MIN_VALUE;
-    private static double MAX = Double.MAX_VALUE;
     public static final int POINTS_NUM = 1000;
 
     public static double epsilon;
@@ -63,9 +61,16 @@ public class Algo {
     public static void monteCarlo(int pointsNum) {
         System.out.println("\n=========================\nStarting Monte Carlo counting...\n");
 
+        double MIN = Double.MIN_VALUE;
+        double MAX = Double.MAX_VALUE;
         RandomArray randomArr = new RandomArray();
-        ArrayList<ArrayList<Double>> firstSetOfPoints = new ArrayList<>(POINTS_NUM);
-        ArrayList<ArrayList<Double>> setOfPoints = new ArrayList<>(POINTS_NUM);
+        ArrayList<ArrayList<Double>> firstSetOfPoints = new ArrayList<>(pointsNum);
+        ArrayList<ArrayList<Double>> setOfPoints = new ArrayList<>(pointsNum);
+
+        for(int i = 0; i < pointsNum; i++) {
+            firstSetOfPoints.set(i, getSatisfyingPoint(decisionVars.size()));
+            System.out.println(firstSetOfPoints.get(i).toString());
+        }
 
         //MIN = najmniejsza wspolrzedna sposrod spelniajacyh punktow
         //MAX = najwieksza wspolrzedna sposrod spelniajacych punktow
@@ -77,7 +82,7 @@ public class Algo {
     }
 
     //////////////////////////////////////
-    private ArrayList<Double> getSatisfyingPoint(int dimension){
+    private static ArrayList<Double> getSatisfyingPoint(int dimension){
         ArrayList<Double> coordinates = new ArrayList<>(dimension);
         Random random = new Random();
         while(true){
