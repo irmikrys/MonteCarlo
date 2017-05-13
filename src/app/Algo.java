@@ -48,6 +48,11 @@ public class Algo {
     }
 
 
+    /**
+     * Checks if all limits are satisfied
+     * @param limitsNum - number of limits (limits.size)
+     * @return - true if all limits are satisfied, false if any is not
+     */
     private static boolean checkLimits(int limitsNum) {
         for(int i = 0; i < limitsNum; i++){
             //check if condition is ok
