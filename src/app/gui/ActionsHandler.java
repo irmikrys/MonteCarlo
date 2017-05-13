@@ -1,5 +1,6 @@
-package app;
+package app.gui;
 
+import app.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

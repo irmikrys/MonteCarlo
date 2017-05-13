@@ -1,4 +1,4 @@
-package app.controllers;
+package app.gui.controllers;
 
 import app.Main;
 import javafx.beans.property.ListProperty;

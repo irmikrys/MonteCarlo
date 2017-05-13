@@ -1,4 +1,4 @@
-package app;
+package app.gui;
 
 import javafx.scene.control.Button;
 

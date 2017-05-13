@@ -1,6 +1,6 @@
-package app.controllers;
+package app.gui.controllers;
 
-import app.ActionsHandler;
+import app.gui.ActionsHandler;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
