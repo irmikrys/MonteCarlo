@@ -68,6 +68,11 @@ public class QuestionaireController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        limitsCounter = 0;
+        isTfFcnOk = false;
+        isTfLimOk = false;
+        isTfValOk = false;
+        limitsVBox.getChildren().clear();
         setCmiEnPolyListener();
         if(QuestionaireController.nonPolyEnabled) {
             cmiEnPoly.setSelected(true);
@@ -88,20 +93,30 @@ public class QuestionaireController implements Initializable {
         cmiEnPoly.selectedProperty().addListener((ov, old_val, new_val) -> {
             if(cmiEnPoly.isSelected()){
                 QuestionaireController.nonPolyEnabled = true;
-                System.out.println("Non-poly enabled cmi");
+                lblErrors.setText("Non-poly enabled");
             } else {
                 QuestionaireController.nonPolyEnabled = false;
-                System.out.println("Non-poly disabled cmi");
+                lblErrors.setText("Non-poly disabled");
             }
         });
     }
 
     private void setMaxCheckListener() {
-        excludeDoubleCheck(maximizeCheck, minimizeCheck);
+        maximizeCheck.selectedProperty().addListener((ov, old_val, new_val) -> {
+            excludeDoubleCheck(maximizeCheck, minimizeCheck);
+            if(maximizeCheck.isSelected()){
+                Algo.maxMinTarget = "maximize";
+            }
+        });
     }
 
     private void setMinCheckListener() {
-        excludeDoubleCheck(minimizeCheck, maximizeCheck);
+        maximizeCheck.selectedProperty().addListener((ov, old_val, new_val) -> {
+            excludeDoubleCheck(minimizeCheck, maximizeCheck);
+            if(minimizeCheck.isSelected()){
+                Algo.maxMinTarget = "minimize";
+            }
+        });
     }
 
     private void setTfFunctionListener(){
@@ -122,16 +137,14 @@ public class QuestionaireController implements Initializable {
     ////////////////////////////////////
 
     private void excludeDoubleCheck(CheckBox first, CheckBox second){
-        first.selectedProperty().addListener((ov, old_val, new_val) -> {
-            if(second.isSelected()){
-                if(first.isSelected()){
-                    second.setSelected(false);
-                }
-                else{
-                    second.setSelected(true);
-                }
+        if(second.isSelected()){
+            if(first.isSelected()){
+                second.setSelected(false);
             }
-        });
+            else{
+                second.setSelected(true);
+            }
+        }
     }
 
     ////////////////////////////////////
