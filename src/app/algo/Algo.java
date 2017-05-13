@@ -86,13 +86,27 @@ public class Algo {
         MAX = coordinates.get(coordinates.size() - 1);
         double RADIUS = (MAX - MIN) * 0.5;
 
+
+        //wybierz pewna ilosc punktow, ktore maja odpowiednio najmniejsza/najwieksza wartosc funkcji celu
+        //dla kazdego z tych punktow znajdz pointsNum sasiadow i do jego sasiadow dodaj tez jego samego jbc
+        //wsrod sasiadow spelniajacych warunki znowu wybierz pewna ilosc i tak aż epsilon < radius
+
+
+
         //dopoki promien kostki wiekszy od zadanego epsilon, szukaj kolejnych punktów
         while(RADIUS > epsilon) {
+
+            //
+
+
+
+
+            setOfPoints = new ArrayList<>(pointsNum);
             randomArr.fillWithRandomPoints(pointsNum, decisionVars.size(), MIN, MAX);
             for (int i = 0; i < pointsNum; i++) {
                 //jak dany punkt spełnia to dodajemy do zbioru kolejnych setOfPoints
                 if (checkConstraints(limits.size(), randomArr.get(i))) {
-
+                    setOfPoints.add(randomArr.get(i));
                 }
             }
             RADIUS = RADIUS * SCALE;

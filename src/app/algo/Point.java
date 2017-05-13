@@ -14,12 +14,12 @@ public class Point {
     }
 
     public Point(ArrayList<Double> coordinates) {
-        this. coordinates = coordinates;
+        this.coordinates = coordinates;
     }
 
-    //zwraca neighborsNum sasiadow w promieniu radius od punktu
+    //zwraca neighborsNum sasiadow w promieniu radius od punktu razem z tym punktem
     public ArrayList<Point> getNeighbors(int neighborsNum, double radius) {
-        ArrayList<Point> neighbors = new ArrayList<>(neighborsNum);
+        ArrayList<Point> neighbors = new ArrayList<>(neighborsNum + 1);
         for(int i = 0; i < neighborsNum; i++) {
             Point point = new Point(coordinates.size());
             for(int j = 0; j < coordinates.size(); j++) {
@@ -29,6 +29,7 @@ public class Point {
             }
             neighbors.add(point);
         }
+        neighbors.add(this);
         return neighbors;
     }
 }
