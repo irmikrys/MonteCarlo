@@ -22,6 +22,7 @@ import java.util.*;
 //TODO: sprawdzanie ograniczen gornych i dolnych dla wszystkich zmiennych decyzyjnych
 //TODO: sprawdzanie przypadku dowolnej funkcji, nie tylko wielomianu
 //TODO: reset wszystkiego przy przejściu do menu/tworzeniu nowego problemu
+    //TODO: przy naciskniau submit function zeby sie nie odblokowalo add limit
 
 public class QuestionaireController implements Initializable {
 

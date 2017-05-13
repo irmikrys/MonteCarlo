@@ -12,12 +12,12 @@ public class Algo {
 
     private static final double MIN = Double.MIN_VALUE;
     private static final double MAX = Double.MAX_VALUE;
-    public static final int POINTS_NUM = 1000;
+    public static final int POINTS_NUM = 5;
 
     public static double epsilon;
     public static Function targetFcn;
     public static String maxMinTarget;
-    public static ArrayList<LimitField> limits;
+    public static ArrayList<LimitField> limits = new ArrayList<>();
     public static ArrayList<DecisionVar> decisionVars = new ArrayList<>();
 
     private static ArrayList<ArrayList<Double>> randomArrs = new ArrayList<>();
@@ -41,9 +41,10 @@ public class Algo {
      * @return - new array filled with random coordinates
      */
     private static ArrayList<Double> genRandomXs(int n) {
-        ArrayList<Double> randomArray = new ArrayList<>(n);
+        System.out.println("Generating random coordinates...");
+        ArrayList<Double> randomArray = new ArrayList<>();
         for(int i = 0; i < n; i++){
-            randomArray.set(i, ThreadLocalRandom.current().nextDouble(MIN, MAX));
+            randomArray.add(i, ThreadLocalRandom.current().nextDouble(MIN, MAX));
         }
         return randomArray;
     }
@@ -54,6 +55,7 @@ public class Algo {
      * @param n - number of coordinates (here: decision variables)
      */
     private static void fillWithRandomArrs(int pointsNum, int n) {
+        System.out.println("Filling with random arrays...");
         randomArrs.clear();
         for(int i = 0; i < pointsNum; i++){
             randomArrs.add(genRandomXs(n));
@@ -66,10 +68,12 @@ public class Algo {
      * @return - true if all limits are satisfied, false if any is not
      */
     private static boolean checkLimits(int limitsNum, ArrayList<Double> coordinates) {
+        System.out.println("Checking limits...");
         clearDecVarVals();
         setDecVarVals(coordinates);
         for(int i = 0; i < limitsNum; i++) {
             LimitField lfTmp = limits.get(i);
+            System.out.println(lfTmp.toString());
             int sizeTmp = lfTmp.vars.size();
             double[] argsTmp = new double[sizeTmp];
             //znajdz argumenty po nazwach w decisionVars i stworz tablice z kolejnymi wartosciami
@@ -82,7 +86,6 @@ public class Algo {
             }
             //oblicz wartosc funkcji dla danego limitu
             double v = lfTmp.function.calculate(argsTmp);
-            System.out.println(v);
             //sprawdz jaki znak jest w tym polu i porownaj wartosc funkcji z wartoscia tfVal
             switch(lfTmp.sign){
                 case "<":
@@ -115,6 +118,7 @@ public class Algo {
     }
 
     public static void monteCarlo(int pointsNum) {
+        System.out.println("\n=========================\nStarting Monte Carlo counting...");
         fillWithRandomArrs(pointsNum, decisionVars.size());
         for(int i = 0; i < pointsNum; i++) {
             checkLimits(limits.size(), randomArrs.get(i));
@@ -124,12 +128,14 @@ public class Algo {
     //////////////////////////////////////
 
     private static void clearDecVarVals() {
+        System.out.println("Clearing decision variables values...");
         for (DecisionVar dv : decisionVars) {
             dv.value = 0;
         }
     }
 
     private static void setDecVarVals(ArrayList<Double> coordinates) {
+        System.out.println("Setting random coordinates...");
         for(int i = 0; i < decisionVars.size(); i++) {
             decisionVars.get(i).value = coordinates.get(i);
         }
