@@ -7,10 +7,6 @@ public class DecisionVar {
     public String name;
     public double value;
 
-    public DecisionVar() {
-
-    }
-
     public DecisionVar(String name) {
         this.name = name;
     }
