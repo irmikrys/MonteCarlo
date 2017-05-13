@@ -440,6 +440,7 @@ public class QuestionaireController implements Initializable {
     @FXML
     public void computeResult(ActionEvent e) {
         lblResult.setText("Action compute not implemented...");
+        Algo.monteCarlo(Algo.POINTS_NUM);
     }
 
     /////////////////////////////////////

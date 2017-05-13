@@ -1,5 +1,6 @@
 package app;
 
+import org.mariuszgromada.math.mxparser.Argument;
 import org.mariuszgromada.math.mxparser.Function;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ public class Algo {
 
     private static final double MIN = Double.MIN_VALUE;
     private static final double MAX = Double.MAX_VALUE;
-    private static final double POINTS_NUM = 1000;
+    public static final int POINTS_NUM = 1000;
 
     public static double epsilon;
     public static Function targetFcn;
@@ -69,10 +70,24 @@ public class Algo {
         clearDecVarVals();
         setDecVarVals(coordinates);
         for(int i = 0; i < limitsNum; i++) {
-            //check if condition is ok
-            //if not ok any, false
+            LimitField lfTmp = limits.get(i);
+            //wez wszystkie argumenty funkcji
+            int argsNum = lfTmp.fcn.getArgumentsNumber();
+            ArrayList<Argument> tmpArgs = new ArrayList<>();
+            for(int arg = 0; arg < argsNum; arg++) {
+                tmpArgs.add(lfTmp.fcn.getArgument(arg));
+            }
+            //sprawdz nazwy argumentow funkcji
+            //znajdz argumenty po nazwach w decisionVars i przypisz im odpowiednie wartosci
         }
         return true;
+    }
+
+    public static void monteCarlo(int pointsNum) {
+        fillWithRandomArrs(pointsNum, decisionVars.size());
+        for(int i = 0; i < pointsNum; i++) {
+            checkLimits(limits.size(), randomArrs.get(i));
+        }
     }
 
     //////////////////////////////////////
