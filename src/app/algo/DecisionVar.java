@@ -1,4 +1,4 @@
-package app;
+package app.algo;
 
 /**
  * Created on 13.05.2017.

@@ -1,4 +1,4 @@
-package app;
+package app.algo;
 
 import org.mariuszgromada.math.mxparser.Function;
 
@@ -11,8 +11,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Algo {
 
     private static final double MIN = Double.MIN_VALUE;
-    private static final double MAX = Double.MAX_VALUE;
-    public static final int POINTS_NUM = 2;
+    private static final double MAX = 100; //Double.MAX_VALUE;
+    public static final int POINTS_NUM = 10000;
 
     public static double epsilon;
     public static Function targetFcn;
@@ -41,7 +41,7 @@ public class Algo {
      * @return - new array filled with random coordinates
      */
     private static ArrayList<Double> genRandomXs(int n) {
-        System.out.println("Generating random coordinates...");
+        //System.out.println("Generating random coordinates...");
         ArrayList<Double> randomArray = new ArrayList<>();
         for(int i = 0; i < n; i++){
             randomArray.add(i, ThreadLocalRandom.current().nextDouble(MIN, MAX));
@@ -55,7 +55,7 @@ public class Algo {
      * @param n - number of coordinates (here: decision variables)
      */
     private static void fillWithRandomArrs(int pointsNum, int n) {
-        System.out.println("Filling with random arrays...");
+        //System.out.println("Filling with random arrays...");
         randomArrs.clear();
         for(int i = 0; i < pointsNum; i++){
             randomArrs.add(genRandomXs(n));
@@ -80,10 +80,9 @@ public class Algo {
             for(int arg = 0; arg < sizeTmp; arg++) {
                 for (DecisionVar decisionVar : decisionVars) {
                     if (decisionVar.name.equals(lfTmp.vars.get(arg))) {
-                        System.out.println("\tDecision variable: " + decisionVar.name +
-                                ", value: " + decisionVar.value);
+                        //System.out.println("\tDecision variable: " + decisionVar.name + ", value: " + decisionVar.value);
                         argsTmp[arg] = decisionVar.value;
-                        System.out.println("\t\tValue set:" + argsTmp[arg]);
+                        //System.out.println("\t\tValue set:" + argsTmp[arg]);
                     }
                 }
             }

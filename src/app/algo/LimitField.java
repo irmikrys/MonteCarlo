@@ -1,4 +1,4 @@
-package app;
+package app.algo;
 
 import org.mariuszgromada.math.mxparser.Function;
 

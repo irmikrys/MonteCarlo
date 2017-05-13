@@ -52,9 +52,10 @@
  */
 package org.mariuszgromada.math.mxparser;
 
-import java.util.ArrayList;
 import org.mariuszgromada.math.mxparser.parsertokens.ParserSymbol;
 import org.mariuszgromada.math.mxparser.parsertokens.Token;
+
+import java.util.ArrayList;
 /**
  * Function class provides possibility to define user functions.
  * Functions can be used in further processing by any expression,
@@ -422,16 +423,23 @@ public class Function extends PrimitiveElement {
 	 */
 	public double calculate(double... params) {
 		if (params.length == this.getParametersNumber()) {
+			System.out.println("\t\t\tPARAMS LENGTH AND PARAMETERS NUBER THE SAME");
 			if (functionBodyType == BODY_RUNTIME) {
-				for (int p = 0; p < params.length; p++)
+				System.out.println("\t\t\tRUNTIME");
+				for (int p = 0; p < params.length; p++) {
 					setArgumentValue(p, params[p]);
+					System.out.println("\t\t\t\t" + params[p]);
+				}
 			} else {
-				for (int p = 0; p < params.length; p++)
-					functionExtension.setParameterValue(p, params[p]);				
+				for (int p = 0; p < params.length; p++) {
+					functionExtension.setParameterValue(p, params[p]);
+					System.out.println("\t\t\t\tELSE: " + params[p]);
+				}
 			}
 			return calculate();
 		}
 		else {
+			System.out.println("WHOOPS SOMETHING WENT WRONG...");
 			this.functionExpression.setSyntaxStatus(SYNTAX_ERROR_OR_STATUS_UNKNOWN, "[" + functionName + "] incorrect number of function parameters (expecting " + getParametersNumber() + ", provided " + params.length + ")!");
 			return Double.NaN;
 		}

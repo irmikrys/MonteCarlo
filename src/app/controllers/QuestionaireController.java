@@ -1,6 +1,9 @@
 package app.controllers;
 
 import app.*;
+import app.algo.Algo;
+import app.algo.DecisionVar;
+import app.algo.LimitField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
