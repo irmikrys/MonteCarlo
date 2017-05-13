@@ -9,8 +9,8 @@ import java.util.ArrayList;
  */
 public class Algo {
 
-    private static final double MIN = Double.MIN_VALUE;
-    private static final double MAX = 100; //Double.MAX_VALUE;
+    private static double MIN = Double.MIN_VALUE;
+    private static double MAX = 100; //Double.MAX_VALUE;
     public static final int POINTS_NUM = 10000;
 
     public static double epsilon;
@@ -18,8 +18,6 @@ public class Algo {
     public static String maxMinTarget;
     public static ArrayList<LimitField> limits = new ArrayList<>();
     public static ArrayList<DecisionVar> decisionVars = new ArrayList<>();
-
-    private static RandomArray randomArr = new RandomArray();
 
     /////////////////////////////////////////////////
 
@@ -52,9 +50,8 @@ public class Algo {
             for(int arg = 0; arg < sizeTmp; arg++) {
                 for (DecisionVar decisionVar : decisionVars) {
                     if (decisionVar.name.equals(lfTmp.vars.get(arg))) {
-                        //System.out.println("\tDecision variable: " + decisionVar.name + ", value: " + decisionVar.value);
                         argsTmp[arg] = decisionVar.value;
-                        //System.out.println("\t\tValue set:" + argsTmp[arg]);
+                        System.out.println("\t\tValue of " + decisionVar.name + " set to: " + argsTmp[arg]);
                     }
                 }
             }
@@ -96,8 +93,15 @@ public class Algo {
         return true;
     }
 
+    /**
+     * Generate pointsNum points each time loop runs and check if they satisfy all conditions,
+     * if they are - generate same number of points around the points that satisfy,
+     * if not - do nothing about them
+     * @param pointsNum - number of points to random generation each time
+     */
     public static void monteCarlo(int pointsNum) {
         System.out.println("\n=========================\nStarting Monte Carlo counting...\n");
+        RandomArray randomArr = new RandomArray();
         randomArr.fillWithRandomArrs(pointsNum, decisionVars.size(), MIN, MAX);
         for(int i = 0; i < pointsNum; i++) {
             checkLimits(limits.size(), randomArr.get(i));
