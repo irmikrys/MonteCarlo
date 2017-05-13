@@ -13,9 +13,8 @@ import static java.util.Collections.sort;
  */
 public class Algo {
 
-    public static final int POINTS_NUM = 1000;
+    public static final int POINTS_NUM = 10;
     private static final double SCALE = 0.8;
-    private static double RADIUS = Double.MAX_VALUE;
 
     public static double epsilon;
     public static Function targetFcn;
@@ -66,8 +65,7 @@ public class Algo {
     public static void monteCarlo(int pointsNum) {
         System.out.println("\n=========================\nStarting Monte Carlo counting...\n");
 
-        double MIN = Double.MIN_VALUE;
-        double MAX = Double.MAX_VALUE;
+        double MIN, MAX;
         RandomArray randomArr = new RandomArray();
         ArrayList<Point> firstSetOfPoints = new ArrayList<>(pointsNum);
         ArrayList<Point> setOfPoints = new ArrayList<>(pointsNum);
@@ -82,11 +80,11 @@ public class Algo {
         }
 
         sort(coordinates);
-        //MIN = najmniejsza wspolrzedna sposrod spelniajacyh punktow
+        //MIN = najmniejsza wspolrzedna sposrod spelniajacych punktow
         MIN = coordinates.get(0);
         //MAX = najwieksza wspolrzedna sposrod spelniajacych punktow
         MAX = coordinates.get(coordinates.size() - 1);
-        RADIUS = MAX - MIN;
+        double RADIUS = (MAX - MIN) * 0.5;
 
         //dopoki promien kostki wiekszy od zadanego epsilon, szukaj kolejnych punktów
         while(RADIUS > epsilon) {
@@ -97,6 +95,7 @@ public class Algo {
 
                 }
             }
+            RADIUS = RADIUS * SCALE;
         }
     }
 

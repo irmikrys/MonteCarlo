@@ -14,7 +14,7 @@ public class RandomArray extends ArrayList<Point> {
      * @param dimension - number of coordinates
      * @return - new array filled with random coordinates
      */
-    public Point getRandomCoordinates(int dimension, final double MIN, final double MAX) {
+    public Point getRandomPoint(int dimension, final double MIN, final double MAX) {
         //System.out.println("Generating random coordinates...");
         ArrayList<Double> randomArray = new ArrayList<>();
         for(int i = 0; i < dimension; i++){
@@ -23,7 +23,7 @@ public class RandomArray extends ArrayList<Point> {
         return new Point(randomArray);
     }
 
-    public Point getRandomCoordinates(int dimension) {
+    public Point getRandomPoint(int dimension) {
         //System.out.println("Generating random coordinates...");
         ArrayList<Double> randomArray = new ArrayList<>();
         Random rand = new Random();
@@ -42,7 +42,7 @@ public class RandomArray extends ArrayList<Point> {
         //System.out.println("Filling with random arrays...");
         this.clear();
         for(int i = 0; i < pointsNum; i++){
-            this.add(getRandomCoordinates(dimension, MIN, MAX));
+            this.add(getRandomPoint(dimension, MIN, MAX));
         }
     }
 
@@ -50,7 +50,7 @@ public class RandomArray extends ArrayList<Point> {
         //System.out.println("Filling with random arrays...");
         this.clear();
         for(int i = 0; i < pointsNum; i++){
-            this.add(getRandomCoordinates(dimension));
+            this.add(getRandomPoint(dimension));
         }
     }
 }
