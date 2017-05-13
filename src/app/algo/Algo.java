@@ -3,6 +3,7 @@ package app.algo;
 import org.mariuszgromada.math.mxparser.Function;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created on 29.04.2017.
@@ -10,8 +11,8 @@ import java.util.ArrayList;
 public class Algo {
 
     private static double MIN = Double.MIN_VALUE;
-    private static double MAX = 100; //Double.MAX_VALUE;
-    public static final int POINTS_NUM = 10000;
+    private static double MAX = Double.MAX_VALUE;
+    public static final int POINTS_NUM = 1000;
 
     public static double epsilon;
     public static Function targetFcn;
@@ -37,10 +38,12 @@ public class Algo {
      * @param limitsNum - number of limits (limits.size)
      * @return - true if all limits are satisfied, false if any is not
      */
-    private static boolean checkLimits(int limitsNum, ArrayList<Double> coordinates) {
+    private static boolean checkConstraints(int limitsNum, ArrayList<Double> coordinates) {
         System.out.println("\nChecking limits...");
+
         clearDecVarVals();
         setDecVarVals(coordinates);
+
         for(int i = 0; i < limitsNum; i++) {
             LimitField lfTmp = limits.get(i);
             System.out.println("\t" + lfTmp.toString());
@@ -101,14 +104,34 @@ public class Algo {
      */
     public static void monteCarlo(int pointsNum) {
         System.out.println("\n=========================\nStarting Monte Carlo counting...\n");
+
         RandomArray randomArr = new RandomArray();
+        ArrayList<ArrayList<Double>> firstSetOfPoints = new ArrayList<>(POINTS_NUM);
+        ArrayList<ArrayList<Double>> setOfPoints = new ArrayList<>(POINTS_NUM);
+
+
+        //MIN = najmniejsza wspolrzedna sposrod spelniajacyh punktow
+        //MAX = najwieksza wspolrzedna sposrod spelniajacych punktow
+
         randomArr.fillWithRandomArrs(pointsNum, decisionVars.size(), MIN, MAX);
         for(int i = 0; i < pointsNum; i++) {
-            checkLimits(limits.size(), randomArr.get(i));
+            checkConstraints(limits.size(), randomArr.get(i));
         }
     }
 
     //////////////////////////////////////
+    private ArrayList<Double> getSatisfyingPoint(int dimension){
+        ArrayList<Double> coordinates = new ArrayList<>(dimension);
+        Random random = new Random();
+        while(true){
+            for(int i = 0; i < dimension; i++){
+                coordinates.set(i, random.nextDouble());
+            }
+            if(checkConstraints(limits.size(), coordinates)){
+                return coordinates;
+            }
+        }
+    }
 
     private static void clearDecVarVals() {
         System.out.println("\tClearing decision variables values...");

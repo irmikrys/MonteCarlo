@@ -10,13 +10,13 @@ public class RandomArray extends ArrayList<ArrayList<Double>> {
 
     /**
      * Generate as many coordinates as number of decision variables
-     * @param n - number of coordinates
+     * @param dimension - number of coordinates
      * @return - new array filled with random coordinates
      */
-    private ArrayList<Double> genRandomXs(int n, final double MIN, final double MAX) {
+    private ArrayList<Double> genRandomXs(int dimension, final double MIN, final double MAX) {
         //System.out.println("Generating random coordinates...");
         ArrayList<Double> randomArray = new ArrayList<>();
-        for(int i = 0; i < n; i++){
+        for(int i = 0; i < dimension; i++){
             randomArray.add(i, ThreadLocalRandom.current().nextDouble(MIN, MAX));
         }
         return randomArray;
@@ -25,13 +25,13 @@ public class RandomArray extends ArrayList<ArrayList<Double>> {
     /**
      * Fill array with random points coordinates
      * @param pointsNum - number of points to generate
-     * @param n - number of coordinates (here: decision variables)
+     * @param dimension - number of coordinates (here: decision variables)
      */
-    public void fillWithRandomArrs(int pointsNum, int n, final double MIN, final double MAX) {
+    public void fillWithRandomArrs(int pointsNum, int dimension, final double MIN, final double MAX) {
         //System.out.println("Filling with random arrays...");
         this.clear();
         for(int i = 0; i < pointsNum; i++){
-            this.add(genRandomXs(n, MIN, MAX));
+            this.add(genRandomXs(dimension, MIN, MAX));
         }
     }
 }
