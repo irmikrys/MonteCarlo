@@ -18,9 +18,22 @@ public class Algo {
     public static Function targetFcn;
     public static String maxMinTarget;
     public static ArrayList<LimitField> limits;
-    public static ArrayList<String> decisionVars = new ArrayList<>();
+    public static ArrayList<DecisionVar> decisionVars = new ArrayList<>();
 
     private static ArrayList<ArrayList<Double>> randomArrs = new ArrayList<>();
+
+    /////////////////////////////////////////////////
+
+    public static boolean containsDecVar(String name) {
+        for(DecisionVar dv : decisionVars) {
+            if(dv.name.equals(name)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /////////////////////////////////////////////////
 
     /**
      * Generate as many coordinates as number of decision variables
@@ -47,17 +60,32 @@ public class Algo {
         }
     }
 
-
     /**
      * Checks if all limits are satisfied by one range of coordinates
      * @param limitsNum - number of limits (limits.size)
      * @return - true if all limits are satisfied, false if any is not
      */
     private static boolean checkLimits(int limitsNum, ArrayList<Double> coordinates) {
+        clearDecVarVals();
+        setDecVarVals(coordinates);
         for(int i = 0; i < limitsNum; i++) {
             //check if condition is ok
             //if not ok any, false
         }
         return true;
+    }
+
+    //////////////////////////////////////
+
+    private static void clearDecVarVals() {
+        for (DecisionVar dv : decisionVars) {
+            dv.value = 0;
+        }
+    }
+
+    private static void setDecVarVals(ArrayList<Double> coordinates) {
+        for(int i = 0; i < decisionVars.size(); i++) {
+            decisionVars.get(i).value = coordinates.get(i);
+        }
     }
 }

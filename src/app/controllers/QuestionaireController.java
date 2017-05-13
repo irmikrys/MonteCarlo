@@ -291,8 +291,8 @@ public class QuestionaireController implements Initializable {
                 System.out.println(limit.toString());
                 Algo.limits.add(limit);
                 for (String tmpDecisionVar : tmpDecisionVars) {
-                    if (!Algo.decisionVars.contains(tmpDecisionVar)) {
-                        Algo.decisionVars.add(tmpDecisionVar);
+                    if (!Algo.containsDecVar(tmpDecisionVar)) {
+                        Algo.decisionVars.add(new DecisionVar(tmpDecisionVar));
                     }
                 }
                 lblErrors.setText(((Double) f.calculate(8.5, 2, 1)).toString());
@@ -395,8 +395,8 @@ public class QuestionaireController implements Initializable {
         Function targetFcn = createFunctionFromString(tfFunction.getText(), targetDecisionVars);
         isTfFcnOk = targetFcn.checkSyntax();
 
-        for(String var: Algo.decisionVars){
-            if(!targetDecisionVars.contains(var)){
+        for(DecisionVar var: Algo.decisionVars){
+            if(!targetDecisionVars.contains(var.name)){
                 lblErrors.setText("Target function doesn't contain all limited decision variables!");
                 btnAddLimit.setDisable(false);
                 return;
