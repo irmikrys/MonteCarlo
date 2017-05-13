@@ -7,30 +7,30 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Created on 13.05.2017.
  */
-public class RandomArray extends ArrayList<ArrayList<Double>> {
+public class RandomArray extends ArrayList<Point> {
 
     /**
      * Generate as many coordinates as number of decision variables
      * @param dimension - number of coordinates
      * @return - new array filled with random coordinates
      */
-    public ArrayList<Double> getRandomCoordinates(int dimension, final double MIN, final double MAX) {
+    public Point getRandomCoordinates(int dimension, final double MIN, final double MAX) {
         //System.out.println("Generating random coordinates...");
         ArrayList<Double> randomArray = new ArrayList<>();
         for(int i = 0; i < dimension; i++){
             randomArray.add(i, ThreadLocalRandom.current().nextDouble(MIN, MAX));
         }
-        return randomArray;
+        return new Point(randomArray);
     }
 
-    public ArrayList<Double> getRandomCoordinates(int dimension) {
+    public Point getRandomCoordinates(int dimension) {
         //System.out.println("Generating random coordinates...");
         ArrayList<Double> randomArray = new ArrayList<>();
         Random rand = new Random();
         for(int i = 0; i < dimension; i++){
             randomArray.add(i, rand.nextDouble());
         }
-        return randomArray;
+        return new Point(randomArray);
     }
 
     /**
@@ -38,7 +38,7 @@ public class RandomArray extends ArrayList<ArrayList<Double>> {
      * @param pointsNum - number of points to generate
      * @param dimension - number of coordinates (here: decision variables)
      */
-    public void fillWithRandomArrs(int pointsNum, int dimension, final double MIN, final double MAX) {
+    public void fillWithRandomPoints(int pointsNum, int dimension, final double MIN, final double MAX) {
         //System.out.println("Filling with random arrays...");
         this.clear();
         for(int i = 0; i < pointsNum; i++){
@@ -46,7 +46,7 @@ public class RandomArray extends ArrayList<ArrayList<Double>> {
         }
     }
 
-    public void fillWithRandomArrs(int pointsNum, int dimension) {
+    public void fillWithRandomPoints(int pointsNum, int dimension) {
         //System.out.println("Filling with random arrays...");
         this.clear();
         for(int i = 0; i < pointsNum; i++){
