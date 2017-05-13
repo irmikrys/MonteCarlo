@@ -11,6 +11,10 @@ public class DecisionVar {
 
     }
 
+    public DecisionVar(String name) {
+        this.name = name;
+    }
+
     public DecisionVar(String  name, int value) {
         this.name = name;
         this.value = value;
