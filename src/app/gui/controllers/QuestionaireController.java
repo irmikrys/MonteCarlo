@@ -34,15 +34,18 @@ public class QuestionaireController implements Initializable {
     static boolean nonPolyEnabled;
     private ArrayList<String> signsArr = new ArrayList<>(Arrays.asList("<", "<=", ">", ">="));
     private boolean isAddReleased = true;
-    private boolean isTfLimOk;
+    private boolean isTfConstrOk;
     private boolean isTfValOk;
     private boolean isTfFcnOk;
-    private int limitsCounter;
+    private int constraintsCounter;
+
+    private boolean limitsSubmitted;
+    private boolean functionSubmitted;
 
     @FXML public BorderPane borderPaneFirst;
     @FXML public AnchorPane splitLeftAnchor;
     @FXML public SplitPane splitPane;
-    @FXML public VBox limitsVBox;
+    @FXML public VBox constraintsVBox;
 
     @FXML public Button btnAddLimit;
     @FXML public Button btnSubmitAllLims;
@@ -52,7 +55,6 @@ public class QuestionaireController implements Initializable {
 
     @FXML public TextField tfFunction;
 
-    @FXML public Label lblFcn;
     @FXML public Label lblEpsVal;
     @FXML public Label lblResult;
     @FXML public Label lblErrors;
@@ -68,11 +70,11 @@ public class QuestionaireController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        limitsCounter = 0;
+        constraintsCounter = 0;
         isTfFcnOk = false;
-        isTfLimOk = false;
+        isTfConstrOk = false;
         isTfValOk = false;
-        limitsVBox.getChildren().clear();
+        constraintsVBox.getChildren().clear();
         setCmiEnPolyListener();
         if(QuestionaireController.nonPolyEnabled) {
             cmiEnPoly.setSelected(true);
@@ -130,7 +132,6 @@ public class QuestionaireController implements Initializable {
     private void setLabelsOnStart() {
         lblErrors.setText("");
         lblEpsVal.setText("0.1");
-        lblFcn.setText("");
         lblResult.setText("Click Compute button to see result.");
     }
 
@@ -232,11 +233,11 @@ public class QuestionaireController implements Initializable {
     @FXML
     public void addLimit(ActionEvent e) {
         isTfValOk = false;
-        isTfLimOk = false;
+        isTfConstrOk = false;
         lblErrors.setText("");
         isAddReleased = false;
         btnAddLimit.setDisable(!isAddReleased);
-        limitsCounter = limitsCounter + 1;
+        constraintsCounter = constraintsCounter + 1;
 
         //utworz hbox
         HBox hBox = new HBox();
@@ -258,19 +259,19 @@ public class QuestionaireController implements Initializable {
         setButtonFieldListener(bf);
         setSubmitLimitListener(submit, tfLim, bf, tfVal);
         addLimitToHBox(hBox, tfLim, bf, tfVal, submit);
-        limitsVBox.getChildren().add(hBox);
+        constraintsVBox.getChildren().add(hBox);
     }
 
     ////////////////////////////////////////
     private void setTfLimListener(TextField tfLim, Button submit) {
         tfLim.textProperty().addListener((observable, oldValue, newValue) -> {
-            isTfLimOk = checkExpressionField(newValue);
-            System.out.println(isTfValOk && isTfLimOk);
-            if(isTfValOk && isTfLimOk) {
+            isTfConstrOk = checkExpressionField(newValue);
+            System.out.println(isTfValOk && isTfConstrOk);
+            if(isTfValOk && isTfConstrOk) {
                 submit.setDisable(false);
             }
             else submit.setDisable(true);
-            System.out.println(isTfLimOk&&isTfValOk);
+            System.out.println(isTfConstrOk &&isTfValOk);
         });
     }
 
@@ -284,7 +285,7 @@ public class QuestionaireController implements Initializable {
             } else {
                 isTfValOk = false;
             }
-            if(isTfValOk && isTfLimOk) submit.setDisable(false);
+            if(isTfValOk && isTfConstrOk) submit.setDisable(false);
             else submit.setDisable(true);
         });
     }
@@ -316,11 +317,11 @@ public class QuestionaireController implements Initializable {
                 }
                 lblErrors.setText(((Double) f.calculate(8.5, 2, 1)).toString());
                 Label lbl = new Label(tfString + " " + bf.getText() + " " + tfVal.getText());
-                limitsVBox.getChildren().remove(limitsCounter - 1);
-                limitsVBox.getChildren().add(limitsCounter - 1, lbl);
+                constraintsVBox.getChildren().remove(constraintsCounter - 1);
+                constraintsVBox.getChildren().add(constraintsCounter - 1, lbl);
                 btnAddLimit.setDisable(isAddReleased);
                 isAddReleased = true;
-                if(limitsCounter > 0) {
+                if(constraintsCounter > 0) {
                     btnSubmitAllLims.setDisable(false);
                 }
             }
@@ -349,6 +350,7 @@ public class QuestionaireController implements Initializable {
         btnAddLimit.setDisable(true);
         btnSubmitAllLims.setDisable(true);
         tfFunction.setDisable(false);
+        limitsSubmitted = true;
     }
 
     ////////////////////////////////////////
@@ -422,6 +424,7 @@ public class QuestionaireController implements Initializable {
             }
         }
         Algo.targetFcn = targetFcn;
+        functionSubmitted = true;
     }
 
     @FXML

@@ -66,12 +66,12 @@
                                                 <Insets bottom="5.0" />
                                              </VBox.margin>
                                           </HBox>
-                                          <VBox fx:id="limitsVBox" alignment="CENTER" spacing="10.0">
+                                          <VBox fx:id="constraintsVBox" alignment="CENTER" spacing="10.0">
                                              <VBox.margin>
                                                 <Insets left="15.0" right="15.0" />
                                              </VBox.margin>
                                           </VBox>
-                                          <Label fx:id="lblFcn" text="Objective function:">
+                                          <Label text="Objective function:">
                                              <font>
                                                 <Font size="14.0" />
                                              </font>
