@@ -3,7 +3,6 @@ package app.algo;
 import org.mariuszgromada.math.mxparser.Function;
 
 import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created on 29.04.2017.
@@ -20,7 +19,7 @@ public class Algo {
     public static ArrayList<LimitField> limits = new ArrayList<>();
     public static ArrayList<DecisionVar> decisionVars = new ArrayList<>();
 
-    private static ArrayList<ArrayList<Double>> randomArrs = new ArrayList<>();
+    private static RandomArray randomArr = new RandomArray();
 
     /////////////////////////////////////////////////
 
@@ -34,33 +33,6 @@ public class Algo {
     }
 
     /////////////////////////////////////////////////
-
-    /**
-     * Generate as many coordinates as number of decision variables
-     * @param n - number of coordinates
-     * @return - new array filled with random coordinates
-     */
-    private static ArrayList<Double> genRandomXs(int n) {
-        //System.out.println("Generating random coordinates...");
-        ArrayList<Double> randomArray = new ArrayList<>();
-        for(int i = 0; i < n; i++){
-            randomArray.add(i, ThreadLocalRandom.current().nextDouble(MIN, MAX));
-        }
-        return randomArray;
-    }
-
-    /**
-     * Fill randomArrs class variable array with random points coordinates
-     * @param pointsNum - number of points to generate
-     * @param n - number of coordinates (here: decision variables)
-     */
-    private static void fillWithRandomArrs(int pointsNum, int n) {
-        //System.out.println("Filling with random arrays...");
-        randomArrs.clear();
-        for(int i = 0; i < pointsNum; i++){
-            randomArrs.add(genRandomXs(n));
-        }
-    }
 
     /**
      * Checks if all limits are satisfied by one range of coordinates
@@ -126,9 +98,9 @@ public class Algo {
 
     public static void monteCarlo(int pointsNum) {
         System.out.println("\n=========================\nStarting Monte Carlo counting...\n");
-        fillWithRandomArrs(pointsNum, decisionVars.size());
+        randomArr.fillWithRandomArrs(pointsNum, decisionVars.size(), MIN, MAX);
         for(int i = 0; i < pointsNum; i++) {
-            checkLimits(limits.size(), randomArrs.get(i));
+            checkLimits(limits.size(), randomArr.get(i));
         }
     }
 
