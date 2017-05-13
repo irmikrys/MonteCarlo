@@ -8,25 +8,25 @@ import java.util.ArrayList;
  * Created on 05.05.2017.
  */
 public class LimitField {
-    public Function fcn;
+    public Function function;
     public String sign;
-    public Double val;
+    public Double value;
     public ArrayList<String> vars = new ArrayList<>();
 
     public LimitField(){
 
     }
 
-    public LimitField(Function fcn, String sign, Double val, ArrayList<String> vars) {
-        this.fcn = fcn;
+    public LimitField(Function function, String sign, Double value, ArrayList<String> vars) {
+        this.function = function;
         this.sign = sign;
-        this.val = val;
+        this.value = value;
         this.vars = vars;
     }
 
     public String toString(){
-        return "\nExpression: " + this.fcn.getFunctionExpressionString() +
+        return "\nExpression: " + this.function.getFunctionExpressionString() +
                 ", Sign : " + this.sign + ", Value: " +
-                this.val + ", DecVars: "+ vars.toString();
+                this.value + ", DecVars: "+ vars.toString();
     }
 }

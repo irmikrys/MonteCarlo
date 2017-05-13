@@ -103,7 +103,7 @@
                                     <HBox alignment="CENTER">
                                        <children>
                                           <Label text="Epsilon: " />
-                                          <Label fx:id="lblEpsVal" text="eps val" />
+                                          <Label fx:id="lblEpsVal" text="eps value" />
                                        </children>
                                        <VBox.margin>
                                           <Insets bottom="10.0" top="10.0" />

@@ -1,6 +1,5 @@
 package app;
 
-import org.mariuszgromada.math.mxparser.Argument;
 import org.mariuszgromada.math.mxparser.Function;
 
 import java.util.ArrayList;
@@ -71,14 +70,17 @@ public class Algo {
         setDecVarVals(coordinates);
         for(int i = 0; i < limitsNum; i++) {
             LimitField lfTmp = limits.get(i);
-            //wez wszystkie argumenty funkcji
-            int argsNum = lfTmp.fcn.getArgumentsNumber();
-            ArrayList<Argument> tmpArgs = new ArrayList<>();
-            for(int arg = 0; arg < argsNum; arg++) {
-                tmpArgs.add(lfTmp.fcn.getArgument(arg));
+            ArrayList<Double> argsTmp = new ArrayList<>();
+            //znajdz argumenty po nazwach w decisionVars i stworz liste z kolejnymi wartosciami
+            for(int arg = 0; arg < lfTmp.vars.size(); arg++) {
+                for (int dv = 0; dv < decisionVars.size(); dv++) {
+                    if(decisionVars.get(dv).name.equals(lfTmp.vars.get(arg))){
+                        argsTmp.add(decisionVars.get(dv).value);
+                    }
+                }
             }
-            //sprawdz nazwy argumentow funkcji
-            //znajdz argumenty po nazwach w decisionVars i przypisz im odpowiednie wartosci
+            //oblicz wartosc funkcji dla danego limitu
+            //sprawdz jaki znak jest w tym polu i porownaj wartosc funkcji z wartoscia tfVal
         }
         return true;
     }
