@@ -74,9 +74,9 @@ public class Algo {
             double[] argsTmp = new double[sizeTmp];
             //znajdz argumenty po nazwach w decisionVars i stworz tablice z kolejnymi wartosciami
             for(int arg = 0; arg < sizeTmp; arg++) {
-                for (int dv = 0; dv < decisionVars.size(); dv++) {
-                    if(decisionVars.get(dv).name.equals(lfTmp.vars.get(arg))){
-                        argsTmp[arg] = decisionVars.get(dv).value;
+                for (DecisionVar decisionVar : decisionVars) {
+                    if (decisionVar.name.equals(lfTmp.vars.get(arg))) {
+                        argsTmp[arg] = decisionVar.value;
                     }
                 }
             }
@@ -86,12 +86,28 @@ public class Algo {
             //sprawdz jaki znak jest w tym polu i porownaj wartosc funkcji z wartoscia tfVal
             switch(lfTmp.sign){
                 case "<":
+                    if(!(v < lfTmp.value)){
+                        System.out.println("Expression: " + v + " < " + lfTmp.value + " is false." );
+                        return false;
+                    }
                     break;
                 case "<=":
+                    if(!(v <= lfTmp.value)){
+                        System.out.println("Expression: " + v + " <= " + lfTmp.value + " is false." );
+                        return false;
+                    }
                     break;
                 case ">":
+                    if(!(v > lfTmp.value)){
+                        System.out.println("Expression: " + v + " > " + lfTmp.value + " is false." );
+                        return false;
+                    }
                     break;
                 case ">=":
+                    if(!(v >= lfTmp.value)){
+                        System.out.println("Expression: " + v + " >= " + lfTmp.value + " is false." );
+                        return false;
+                    }
                     break;
             }
         }
