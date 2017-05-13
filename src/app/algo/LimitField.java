@@ -45,6 +45,7 @@ public class LimitField {
                 }
             }
         }
+
         //oblicz wartosc funkcji dla danego limitu
         double v = this.function.calculate(argsTmp);
         System.out.println("\tCalculated value: " + v);

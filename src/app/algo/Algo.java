@@ -11,6 +11,7 @@ import java.util.Random;
 public class Algo {
 
     public static final int POINTS_NUM = 1000;
+    private static final double SCALE = 0.8;
 
     public static double epsilon;
     public static Function targetFcn;
@@ -46,7 +47,7 @@ public class Algo {
 
         for(int i = 0; i < limitsNum; i++) {
             LimitField lfTmp = limits.get(i);
-            satisfies = lfTmp.checkConstraint(coordinates, decisionVars);
+            satisfies = lfTmp.checkConstraint(decisionVars);
             if(!satisfies) return false;
         }
         return true;
