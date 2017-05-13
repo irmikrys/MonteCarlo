@@ -70,17 +70,30 @@ public class Algo {
         setDecVarVals(coordinates);
         for(int i = 0; i < limitsNum; i++) {
             LimitField lfTmp = limits.get(i);
-            ArrayList<Double> argsTmp = new ArrayList<>();
-            //znajdz argumenty po nazwach w decisionVars i stworz liste z kolejnymi wartosciami
-            for(int arg = 0; arg < lfTmp.vars.size(); arg++) {
+            int sizeTmp = lfTmp.vars.size();
+            double[] argsTmp = new double[sizeTmp];
+            //znajdz argumenty po nazwach w decisionVars i stworz tablice z kolejnymi wartosciami
+            for(int arg = 0; arg < sizeTmp; arg++) {
                 for (int dv = 0; dv < decisionVars.size(); dv++) {
                     if(decisionVars.get(dv).name.equals(lfTmp.vars.get(arg))){
-                        argsTmp.add(decisionVars.get(dv).value);
+                        argsTmp[arg] = decisionVars.get(dv).value;
                     }
                 }
             }
             //oblicz wartosc funkcji dla danego limitu
+            double v = lfTmp.function.calculate(argsTmp);
+            System.out.println(v);
             //sprawdz jaki znak jest w tym polu i porownaj wartosc funkcji z wartoscia tfVal
+            switch(lfTmp.sign){
+                case "<":
+                    break;
+                case "<=":
+                    break;
+                case ">":
+                    break;
+                case ">=":
+                    break;
+            }
         }
         return true;
     }
