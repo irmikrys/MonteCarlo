@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
@@ -42,49 +43,62 @@
                      <children>
                         <BorderPane layoutX="64.0" layoutY="115.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <center>
-                              <ScrollPane BorderPane.alignment="CENTER">
-                                 <content>
-                                    <BorderPane fx:id="borderPaneFirst" prefHeight="450.0" prefWidth="402.0">
-                                       <center>
-                                          <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0" BorderPane.alignment="CENTER">
+                              <BorderPane fx:id="borderPaneFirst" prefHeight="450.0" prefWidth="402.0" BorderPane.alignment="CENTER">
+                                 <center>
+                                    <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0" BorderPane.alignment="CENTER">
+                                       <children>
+                                          <Label text="(spaces not allowed in expressions signatures)">
+                                             <VBox.margin>
+                                                <Insets top="5.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                          <Label text="Constraints: ">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <HBox alignment="CENTER" spacing="15.0">
                                              <children>
-                                                <Label text="(spaces not allowed in limits/function signatures)" />
-                                                <HBox alignment="CENTER" spacing="15.0">
-                                                   <children>
-                                                      <Label text="Limitations: " />
-                                                      <Button fx:id="btnAddLimit" mnemonicParsing="false" onAction="#addLimit" text="Add" />
-                                                      <Button fx:id="btnSubmitAllLims" mnemonicParsing="false" onAction="#submitAllLimits" text="Submit All" />
-                                                   </children>
-                                                   <VBox.margin>
-                                                      <Insets top="15.0" />
-                                                   </VBox.margin>
-                                                </HBox>
-                                                <VBox fx:id="limitsVBox" alignment="CENTER" spacing="10.0">
-                                                   <VBox.margin>
-                                                      <Insets left="15.0" right="15.0" />
-                                                   </VBox.margin></VBox>
-                                                <HBox alignment="CENTER" spacing="15.0">
-                                                   <children>
-                                                      <Label text="Function: " />
-                                                      <TextField fx:id="tfFunction" />
-                                                      <Button fx:id="btnSubmitFcn" mnemonicParsing="false" onAction="#submitFcn" text="Submit">
-                                                         <tooltip>
-                                                            <Tooltip text="You have to submit all limits first..." />
-                                                         </tooltip></Button>
-                                                   </children>
-                                                   <VBox.margin>
-                                                      <Insets bottom="15.0" top="15.0" />
-                                                   </VBox.margin>
-                                                </HBox>
-                                                <Label fx:id="lblFcn" text="Users function" />
-                                                <CheckBox fx:id="minimizeCheck" mnemonicParsing="false" text="Minimize" />
-                                                <CheckBox fx:id="maximizeCheck" mnemonicParsing="false" text="Maximize" />
+                                                <Button fx:id="btnAddLimit" mnemonicParsing="false" onAction="#addLimit" text="Add" />
+                                                <Button fx:id="btnSubmitAllLims" mnemonicParsing="false" onAction="#submitAllLimits" text="Submit All" />
                                              </children>
+                                             <VBox.margin>
+                                                <Insets bottom="5.0" />
+                                             </VBox.margin>
+                                          </HBox>
+                                          <VBox fx:id="limitsVBox" alignment="CENTER" spacing="10.0">
+                                             <VBox.margin>
+                                                <Insets left="15.0" right="15.0" />
+                                             </VBox.margin>
                                           </VBox>
-                                       </center>
-                                    </BorderPane>
-                                 </content>
-                              </ScrollPane>
+                                          <Label fx:id="lblFcn" text="Objective function:">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <HBox alignment="CENTER" spacing="15.0">
+                                             <children>
+                                                <TextField fx:id="tfFunction" />
+                                                <VBox spacing="5.0">
+                                                   <children>
+                                                      <CheckBox fx:id="minimizeCheck" mnemonicParsing="false" text="Minimize" />
+                                                      <CheckBox fx:id="maximizeCheck" mnemonicParsing="false" text="Maximize" />
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </HBox>
+                                          <Button fx:id="btnSubmitFcn" mnemonicParsing="false" onAction="#submitFcn" text="Submit">
+                                             <tooltip>
+                                                <Tooltip text="You have to submit all limits first..." />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                    </VBox>
+                                 </center>
+                              </BorderPane>
                            </center>
                         </BorderPane>
                      </children>
