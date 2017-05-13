@@ -12,6 +12,7 @@ public class Algo {
 
     public static final int POINTS_NUM = 1000;
     private static final double SCALE = 0.8;
+    private static final double RADIUS = Double.MAX_VALUE;
 
     public static double epsilon;
     public static Function targetFcn;
@@ -40,7 +41,7 @@ public class Algo {
     private static boolean checkConstraints(int limitsNum, ArrayList<Double> coordinates) {
         System.out.println("\nChecking constraints...");
 
-        boolean satisfies = false;
+        boolean satisfies;
 
         clearDecVarVals();
         setDecVarVals(coordinates);
@@ -67,22 +68,51 @@ public class Algo {
         RandomArray randomArr = new RandomArray();
         ArrayList<ArrayList<Double>> firstSetOfPoints = new ArrayList<>(pointsNum);
         ArrayList<ArrayList<Double>> setOfPoints = new ArrayList<>(pointsNum);
+        ArrayList<Double> coordinates = new ArrayList<>();
 
+        //znajdz pointsNum punktow na poczatek spelniajacych ograniczenia i dodaj do zbioru wspolrzednych
         for(int i = 0; i < pointsNum; i++) {
-            firstSetOfPoints.set(i, getSatisfyingPoint(decisionVars.size()));
+            ArrayList<Double> satisfyingCoordinates = getSatisfyingPoint(decisionVars.size());
+            coordinates.addAll(satisfyingCoordinates);
+            firstSetOfPoints.set(i, satisfyingCoordinates);
             System.out.println(firstSetOfPoints.get(i).toString());
         }
 
         //MIN = najmniejsza wspolrzedna sposrod spelniajacyh punktow
+        MIN = getMinValue(coordinates);
         //MAX = najwieksza wspolrzedna sposrod spelniajacych punktow
+        MAX = getMaxValue(coordinates);
 
         randomArr.fillWithRandomArrs(pointsNum, decisionVars.size(), MIN, MAX);
         for(int i = 0; i < pointsNum; i++) {
-            checkConstraints(limits.size(), randomArr.get(i));
+            //jak dany punkt spełnia to dodajemy do zbioru kolejnych setOfPoints
+            if(checkConstraints(limits.size(), randomArr.get(i))){
+
+            }
         }
     }
 
     //////////////////////////////////////
+    private static double getMinValue(ArrayList<Double> coordinates) {
+        double minValue = Double.MAX_VALUE;
+        for (Double coordinate : coordinates) {
+            if (coordinate < minValue) {
+                minValue = coordinate;
+            }
+        }
+        return minValue;
+    }
+
+    private static double getMaxValue(ArrayList<Double> coordinates) {
+        double maxValue = -Double.MAX_VALUE;
+        for (Double coordinate : coordinates) {
+            if (coordinate > maxValue) {
+                maxValue = coordinate;
+            }
+        }
+        return maxValue;
+    }
+
     private static ArrayList<Double> getSatisfyingPoint(int dimension){
         ArrayList<Double> coordinates = new ArrayList<>(dimension);
         Random random = new Random();
