@@ -25,7 +25,7 @@ public class LimitField {
     }
 
     public String toString(){
-        return "\nExpression: " + this.function.getFunctionExpressionString() +
+        return "Expression: " + this.function.getFunctionExpressionString() +
                 ", Sign : " + this.sign + ", Value: " +
                 this.value + ", DecVars: "+ vars.toString();
     }
