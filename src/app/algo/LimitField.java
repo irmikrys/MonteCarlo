@@ -30,7 +30,7 @@ public class LimitField {
                 this.value + ", DecVars: "+ vars.toString();
     }
 
-    public boolean checkConstraint(ArrayList<Double> coordinates, ArrayList<DecisionVar> decVars) {
+    public boolean checkConstraint(ArrayList<DecisionVar> decVars) {
         System.out.println("\t" + this.toString());
 
         int sizeTmp = this.vars.size();
