@@ -39,6 +39,7 @@ public class QuestionaireController implements Initializable {
     private boolean isTfConstrOk;
     private boolean isTfValOk;
     private boolean isTfFcnOk;
+    private boolean isObjFcnOk;
     private int constraintsCounter;
 
     private boolean limitsSubmitted;
@@ -49,6 +50,7 @@ public class QuestionaireController implements Initializable {
     @FXML public SplitPane splitPane;
     @FXML public VBox constraintsVBox;
     @FXML public VBox vBoxResult;
+    @FXML public HBox hBoxObjFcn;
 
     @FXML public Button btnAddLimit;
     @FXML public Button btnSubmitAllLims;
@@ -86,12 +88,18 @@ public class QuestionaireController implements Initializable {
         setMinCheckListener();
         setTfFunctionListener();
         setLabelsOnStart();
+
         btnSubmitAllLims.setDisable(true);
         btnSubmitFcn.setDisable(true);
+        btnCompute.setDisable(true);
         tfFunction.setDisable(true);
+        maximizeCheck.setSelected(true);
+        maximizeCheck.setDisable(true);
+        minimizeCheck.setDisable(true);
+
         Algo.epsilon = Double.parseDouble(lblEpsVal.getText());
         Algo.decisionVars.clear();
-        Algo.maxMinTarget = "";
+        Algo.maxMinTarget = "maximize";
         Algo.limits.clear();
         Algo.targetFcn = null;
     }
@@ -120,7 +128,7 @@ public class QuestionaireController implements Initializable {
     }
 
     private void setMinCheckListener() {
-        maximizeCheck.selectedProperty().addListener((ov, old_val, new_val) -> {
+        minimizeCheck.selectedProperty().addListener((ov, old_val, new_val) -> {
             excludeDoubleCheck(minimizeCheck, maximizeCheck);
             if(minimizeCheck.isSelected()){
                 Algo.maxMinTarget = "minimize";
@@ -273,12 +281,11 @@ public class QuestionaireController implements Initializable {
     private void setTfLimListener(TextField tfLim, Button submit) {
         tfLim.textProperty().addListener((observable, oldValue, newValue) -> {
             isTfConstrOk = checkExpressionField(newValue);
-            System.out.println(isTfValOk && isTfConstrOk);
             if(isTfValOk && isTfConstrOk) {
                 submit.setDisable(false);
             }
             else submit.setDisable(true);
-            System.out.println(isTfConstrOk &&isTfValOk);
+            //System.out.println(isTfConstrOk &&isTfValOk);
         });
     }
 
@@ -366,8 +373,8 @@ public class QuestionaireController implements Initializable {
     private boolean checkExpressionField(String tfText){
         if(!QuestionaireController.nonPolyEnabled) {
             if(tfText.matches(
-                    "^[-]?([0-9]+\\.?[0-9]*[*])?[x][0-9]*(\\^[0-9]+)?" +
-                            "([+-]([0-9]+\\.?[0-9]*[*])?[x][0-9]*(\\^[0-9]+)?)*$")
+                    "^[-]?([0-9]+\\.?[0-9]*\\s*[*]\\s*)?[x][0-9]*(\\^[0-9]+)?" +
+                            "(\\s*[+-]\\s*([0-9]+\\.?[0-9]*\\s*[*]\\s*)?[x][0-9]*(\\^[0-9]+)?)*$")
                     ) {
                 return true;
             } else {
@@ -416,22 +423,47 @@ public class QuestionaireController implements Initializable {
 
     @FXML
     public void submitFcn(ActionEvent e) {
-        lblErrors.setText("Action submit function not fully implemented...");
+        //lblErrors.setText("Action submit function not fully implemented...");
 
-        btnAddLimit.setDisable(true);
         ArrayList<String> targetDecisionVars = new ArrayList<>();
         Function targetFcn = createFunctionFromString(tfFunction.getText(), targetDecisionVars);
-        isTfFcnOk = targetFcn.checkSyntax();
+        isObjFcnOk = targetFcn.checkSyntax();
+        if(!isObjFcnOk) {
+            btnSubmitFcn.setDisable(true);
+            lblErrors.setText("SYNTAX ERROR WHILE PARSING OBJ FCN");
+            e.consume();
+        }
 
         for(DecisionVar var: Algo.decisionVars){
             if(!targetDecisionVars.contains(var.name)){
-                lblErrors.setText("Target function doesn't contain all limited decision variables!");
-                btnAddLimit.setDisable(false);
+                lblErrors.setText("Target function doesn't contain all decision variables!");
                 return;
             }
         }
+
+        ArrayList<DecisionVar> arrDV = new ArrayList<>();
+        for(String decVarTarget: targetDecisionVars){
+            arrDV.add(new DecisionVar(decVarTarget));
+        }
+
+        Algo.decisionVars = arrDV;
         Algo.targetFcn = targetFcn;
         functionSubmitted = true;
+
+        if(functionSubmitted && limitsSubmitted) btnCompute.setDisable(false);
+
+        String objFcnString = tfFunction.getText() + " -> ";
+        if(maximizeCheck.isSelected()){
+            objFcnString += "max";
+        }
+        else{
+            objFcnString += "min";
+        }
+        hBoxObjFcn.getChildren().clear();
+        hBoxObjFcn.getChildren().add(new Label(objFcnString));
+
+        btnSubmitFcn.setDisable(true);
+
     }
 
     @FXML
