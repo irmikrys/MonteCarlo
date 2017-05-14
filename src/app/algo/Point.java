@@ -8,7 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Point implements Comparable<Point> {
 
-    ArrayList<Double> coordinates = new ArrayList<>();
+    public ArrayList<Double> coordinates = new ArrayList<>();
     double objFunctionValue;
 
     public Point() {

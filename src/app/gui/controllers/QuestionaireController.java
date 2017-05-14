@@ -1,9 +1,10 @@
 package app.gui.controllers;
 
-import app.*;
+import app.Main;
 import app.algo.Algo;
 import app.algo.DecisionVar;
 import app.algo.LimitField;
+import app.algo.Point;
 import app.gui.ActionsHandler;
 import app.gui.ButtonFields;
 import javafx.event.ActionEvent;
@@ -500,9 +501,13 @@ public class QuestionaireController implements Initializable {
 
     @FXML
     public void computeResult(ActionEvent e) {
+        Point point = Algo.monteCarlo(Algo.POINTS_NUM);
+        double[] coords = new double[point.coordinates.size()];
+        for (int j = 0; j < point.coordinates.size(); j++) {
+            coords[j] = point.coordinates.get(j);
+        }
+        lblResult.setText("Objective Function: " + Algo.targetFcn.calculate(coords));
         vBoxResult.getChildren().clear();
-        lblResult.setText("");
-        Algo.monteCarlo(Algo.POINTS_NUM);
         for(int i = 0; i < Algo.decisionVars.size(); i++) {
             vBoxResult.getChildren().add(
                     new Label(Algo.decisionVars.get(i).name + " = " + Algo.decisionVars.get(i).value)

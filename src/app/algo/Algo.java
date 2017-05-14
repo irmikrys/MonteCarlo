@@ -65,7 +65,7 @@ public class Algo {
      * if not - do nothing about them
      * @param pointsNum - number of points to random generation each time
      */
-    public static void monteCarlo(int pointsNum) {
+    public static Point monteCarlo(int pointsNum) {
         System.out.println("\n=========================\nStarting Monte Carlo counting...\n");
 
         double MIN, MAX;
@@ -105,7 +105,7 @@ public class Algo {
             }
             sort(setOfPoints);
             //System.out.println(setOfPoints.toString());
-            if(Algo.maxMinTarget.equals("maximize")) { //FIXME
+            if(Algo.maxMinTarget.equals("maximize")) {
                 //System.out.println("======MAXIMIZE=======");
                 Collections.reverse(setOfPoints);
             }
@@ -127,6 +127,7 @@ public class Algo {
         for (DecisionVar decisionVar : decisionVars) {
             System.out.println(decisionVar.toString());
         }
+        return bestPoint;
     }
 
     //////////////////////////////////////
