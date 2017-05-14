@@ -31,7 +31,12 @@ public class Point implements Comparable<Point> {
                 double maxTmp = coordinates.get(j) + radius;
                 point.coordinates.set(j, ThreadLocalRandom.current().nextDouble(minTmp, maxTmp));
             }
-            neighbors.add(point);
+            if(Algo.checkConstraints(Algo.limits.size(), point)) {
+                neighbors.add(point);
+            }
+            else {
+                i--;
+            }
         }
         neighbors.add(this);
         return neighbors;

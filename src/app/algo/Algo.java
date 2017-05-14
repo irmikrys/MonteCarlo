@@ -42,7 +42,7 @@ public class Algo {
      * @param limitsNum - number of limits (limits.size)
      * @return - true if all limits are satisfied, false if any is not
      */
-    private static boolean checkConstraints(int limitsNum, Point point) {
+    public static boolean checkConstraints(int limitsNum, Point point) {
         System.out.println("\nChecking constraints...");
 
         boolean satisfies;
@@ -102,10 +102,9 @@ public class Algo {
         }
         Point bestPoint = setOfPoints.get(0);
 
-        //dla kazdego z tych punktow znajdz pointsNum sasiadow i do jego sasiadow dodaj tez jego samego jbc
-        bestPoint.getNeighbors(POINTS_NUM, RADIUS);
+        //dla kazdego z tych punktow znajdz pointsNum sasiadow
+        setOfPoints = bestPoint.getNeighbors(POINTS_NUM, RADIUS);
 
-        //wsrod sasiadow spelniajacych warunki znowu wybierz pewna ilosc i tak aż epsilon < radius
 
 
 
