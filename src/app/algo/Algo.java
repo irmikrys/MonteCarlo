@@ -126,12 +126,14 @@ public class Algo {
 
     private static Point getSatisfyingPoint(int dimension){
         System.out.println("TRYING TO GET SATISFYING POINT...");
-        Point point = new Point();
-        point.coordinates = new ArrayList<>(dimension);
+        //Point point = new Point();
+        //point.coordinates = new ArrayList<>(dimension);
         Random random = new Random();
         double[] tmpCoords = new double[dimension];
         while(true){
             for(int iter = 0; iter < ITER_NUM; iter++) {
+                Point point = new Point();
+                point.coordinates = new ArrayList<>(dimension);
                 for (int i = 0; i < dimension; i++) {
                     tmpCoords[i] = random.nextDouble() * iter;
                     point.coordinates.add(i, tmpCoords[i]);

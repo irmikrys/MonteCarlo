@@ -439,7 +439,7 @@ public class Function extends PrimitiveElement {
 			return calculate();
 		}
 		else {
-			System.out.println("WHOOPS SOMETHING WENT WRONG...");
+			System.out.println("\t\tWHOOPS SOMETHING WENT WRONG...");
 			this.functionExpression.setSyntaxStatus(SYNTAX_ERROR_OR_STATUS_UNKNOWN, "[" + functionName + "] incorrect number of function parameters (expecting " + getParametersNumber() + ", provided " + params.length + ")!");
 			return Double.NaN;
 		}
