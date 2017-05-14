@@ -14,7 +14,7 @@ import static java.util.Collections.sort;
  */
 public class Algo {
 
-    public static final int POINTS_NUM = 5;
+    public static final int POINTS_NUM = 1000;
     private static final double SCALE = 0.5;
     private static final int SATISFYING_POINTS_NUM = 5;
     private static final int ITER_NUM = 10;
@@ -69,7 +69,6 @@ public class Algo {
         System.out.println("\n=========================\nStarting Monte Carlo counting...\n");
 
         double MIN, MAX;
-        RandomArray randomArr = new RandomArray();
         ArrayList<Point> setOfPoints = new ArrayList<>(pointsNum);
         ArrayList<Double> coordinates = new ArrayList<>();
 
@@ -86,7 +85,7 @@ public class Algo {
         MIN = coordinates.get(0);
         MAX = coordinates.get(coordinates.size() - 1);
         double RADIUS = abs((MAX - MIN) * 0.5);
-        System.out.println(">>>>>>> RADIUS: "+RADIUS);
+        //System.out.println(">>>>>>> RADIUS: "+RADIUS);
 
         Point bestPoint;
         //szukaj kolejnych punktów, dopoki promien kostki wiekszy od zadanego epsilon
@@ -115,7 +114,7 @@ public class Algo {
             setOfPoints = bestPoint.getNeighbors(POINTS_NUM, RADIUS);
 
             RADIUS = RADIUS * SCALE;
-             System.out.println(">>>>>>> RADIUS: "+RADIUS);
+             //System.out.println(">>>>>>> RADIUS: "+RADIUS);
 
         } while(RADIUS > epsilon);
 
@@ -129,7 +128,7 @@ public class Algo {
     //////////////////////////////////////
 
     private static Point getSatisfyingPoint(int dimension){
-        System.out.println("\n\n======TRYING TO GET SATISFYING POINT...");
+        //System.out.println("\n\n======TRYING TO GET SATISFYING POINT...");
         Point point = new Point();
         point.coordinates = new ArrayList<>(dimension);
         for(int i = 0; i < dimension; i++){
@@ -152,14 +151,14 @@ public class Algo {
     }
 
     private static void clearDecVarVals() {
-        System.out.println("\tClearing decision variables values...");
+        //System.out.println("\tClearing decision variables values...");
         for (DecisionVar dv : decisionVars) {
             dv.value = 0;
         }
     }
 
     private static void setDecVarVals(ArrayList<Double> coordinates) {
-        System.out.println("\tSetting coordinates to decision variables...");
+        //System.out.println("\tSetting coordinates to decision variables...");
         for(int i = 0; i < decisionVars.size(); i++) {
             decisionVars.get(i).value = coordinates.get(i);
         }

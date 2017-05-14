@@ -90,6 +90,10 @@ public class QuestionaireController implements Initializable {
         btnSubmitFcn.setDisable(true);
         tfFunction.setDisable(true);
         Algo.epsilon = Double.parseDouble(lblEpsVal.getText());
+        Algo.decisionVars.clear();
+        Algo.maxMinTarget = "";
+        Algo.limits.clear();
+        Algo.targetFcn = null;
     }
 
     ////////////////////////////////////
