@@ -48,6 +48,7 @@ public class QuestionaireController implements Initializable {
     @FXML public AnchorPane splitLeftAnchor;
     @FXML public SplitPane splitPane;
     @FXML public VBox constraintsVBox;
+    @FXML public VBox vBoxResult;
 
     @FXML public Button btnAddLimit;
     @FXML public Button btnSubmitAllLims;
@@ -463,8 +464,15 @@ public class QuestionaireController implements Initializable {
 
     @FXML
     public void computeResult(ActionEvent e) {
-        lblResult.setText("Action compute not implemented...");
+        vBoxResult.getChildren().clear();
+        lblResult.setText("");
         Algo.monteCarlo(Algo.POINTS_NUM);
+        for(int i = 0; i < Algo.decisionVars.size(); i++) {
+            vBoxResult.getChildren().add(
+                    new Label(Algo.decisionVars.get(i).name + " = " + Algo.decisionVars.get(i).value)
+            );
+        }
+
     }
 
     /////////////////////////////////////

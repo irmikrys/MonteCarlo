@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+import static java.lang.Math.abs;
 import static java.util.Collections.sort;
 
 /**
@@ -84,8 +85,8 @@ public class Algo {
         sort(coordinates);
         MIN = coordinates.get(0);
         MAX = coordinates.get(coordinates.size() - 1);
-        double RADIUS = (MAX - MIN) * 0.5;
-
+        double RADIUS = abs((MAX - MIN) * 0.5);
+        System.out.println(">>>>>>> RADIUS: "+RADIUS);
 
         Point bestPoint;
         //szukaj kolejnych punktów, dopoki promien kostki wiekszy od zadanego epsilon
@@ -101,17 +102,20 @@ public class Algo {
             }
             sort(setOfPoints);
             System.out.println(setOfPoints.toString());
-            if(Algo.maxMinTarget.equals("minimize")) { //FIXME
-                System.out.println("======MINIMIZE=======");
+            if(Algo.maxMinTarget.equals("maximize")) { //FIXME
+                System.out.println("======MAXIMIZE=======");
                 Collections.reverse(setOfPoints);
             }
-            System.out.println("======MAXIMIZE=======");
+            else {
+                System.out.println("======MINIMIZE=======");
+            }
             bestPoint = setOfPoints.get(0);
 
             //dla kazdego z tych punktow znajdz pointsNum sasiadow
             setOfPoints = bestPoint.getNeighbors(POINTS_NUM, RADIUS);
 
             RADIUS = RADIUS * SCALE;
+             System.out.println(">>>>>>> RADIUS: "+RADIUS);
 
         } while(RADIUS > epsilon);
 
@@ -125,20 +129,22 @@ public class Algo {
     //////////////////////////////////////
 
     private static Point getSatisfyingPoint(int dimension){
-        System.out.println("TRYING TO GET SATISFYING POINT...");
-        //Point point = new Point();
-        //point.coordinates = new ArrayList<>(dimension);
+        System.out.println("\n\n======TRYING TO GET SATISFYING POINT...");
+        Point point = new Point();
+        point.coordinates = new ArrayList<>(dimension);
+        for(int i = 0; i < dimension; i++){
+            point.coordinates.add(i, 0.0);
+        }
         Random random = new Random();
         double[] tmpCoords = new double[dimension];
         while(true){
-            for(int iter = 0; iter < ITER_NUM; iter++) {
-                Point point = new Point();
-                point.coordinates = new ArrayList<>(dimension);
+            for(int iter = 1; iter < ITER_NUM; iter++) {
                 for (int i = 0; i < dimension; i++) {
                     tmpCoords[i] = random.nextDouble() * iter;
-                    point.coordinates.add(i, tmpCoords[i]);
+                    point.coordinates.set(i, tmpCoords[i]);
                 }
                 if (checkConstraints(limits.size(), point)) {
+                    System.out.println("====Satisfying " + point.toString());
                     return point;
                 }
             }
@@ -153,7 +159,7 @@ public class Algo {
     }
 
     private static void setDecVarVals(ArrayList<Double> coordinates) {
-        System.out.println("\tSetting random coordinates...");
+        System.out.println("\tSetting coordinates to decision variables...");
         for(int i = 0; i < decisionVars.size(); i++) {
             decisionVars.get(i).value = coordinates.get(i);
         }

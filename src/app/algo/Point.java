@@ -32,6 +32,7 @@ public class Point implements Comparable<Point> {
             Point point = new Point(coordinates.size());
             for(int j = 0; j < coordinates.size(); j++) {
                 double minTmp = coordinates.get(j) - radius;
+                if(minTmp < 0) minTmp = Double.MIN_VALUE;
                 double maxTmp = coordinates.get(j) + radius;
                 point.coordinates.add(j, ThreadLocalRandom.current().nextDouble(minTmp, maxTmp));
             }

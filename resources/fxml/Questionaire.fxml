@@ -129,6 +129,7 @@
                                        </VBox.margin>
                                     </Label>
                                     <Label fx:id="lblResult" text="Computed result" />
+                                    <VBox fx:id="vBoxResult" />
                                  </children>
                                  <BorderPane.margin>
                                     <Insets />
