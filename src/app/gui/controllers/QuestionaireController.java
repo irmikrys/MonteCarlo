@@ -358,13 +358,13 @@ public class QuestionaireController implements Initializable {
 
     @FXML
     public void submitAllLimits(ActionEvent e) {
-        lblErrors.setText("Submit all limits not fully implemented...");
-        //if(nieWszystkieZmienneMajaOgraniczenieGorneIDolne){
-        //    komunikat ze musi dodać wszystkie ogarniczenia
-        //}else{
+        //lblErrors.setText("Submit all limits not fully implemented...");
+
         btnAddLimit.setDisable(true);
         btnSubmitAllLims.setDisable(true);
         tfFunction.setDisable(false);
+        minimizeCheck.setDisable(false);
+        maximizeCheck.setDisable(false);
         limitsSubmitted = true;
     }
 
