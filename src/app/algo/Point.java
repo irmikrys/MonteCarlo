@@ -6,14 +6,18 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Created on 13.05.2017.
  */
-public class Point {
+public class Point implements Comparable<Point> {
+
     ArrayList<Double> coordinates;
+    double objFunctionValue;
 
     public Point(int size) {
+        super();
         this.coordinates = new ArrayList<>(size);
     }
 
     public Point(ArrayList<Double> coordinates) {
+        super();
         this.coordinates = coordinates;
     }
 
@@ -32,4 +36,12 @@ public class Point {
         neighbors.add(this);
         return neighbors;
     }
+
+    /////////////////////////////////////////////
+
+    @Override
+    public int compareTo(Point comparePoint) {
+        return new Double(this.objFunctionValue).compareTo(comparePoint.objFunctionValue);
+    }
+
 }

@@ -3,6 +3,7 @@ package app.algo;
 import org.mariuszgromada.math.mxparser.Function;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -15,6 +16,7 @@ public class Algo {
 
     public static final int POINTS_NUM = 10;
     private static final double SCALE = 0.8;
+    private static final int SATISFYING_POINTS_NUM = 1;
 
     public static double epsilon;
     public static Function targetFcn;
@@ -67,7 +69,6 @@ public class Algo {
 
         double MIN, MAX;
         RandomArray randomArr = new RandomArray();
-        ArrayList<Point> firstSetOfPoints = new ArrayList<>(pointsNum);
         ArrayList<Point> setOfPoints = new ArrayList<>(pointsNum);
         ArrayList<Double> coordinates = new ArrayList<>();
 
@@ -75,20 +76,35 @@ public class Algo {
         for(int i = 0; i < pointsNum; i++) {
             Point satisfyingPoint = getSatisfyingPoint(decisionVars.size());
             coordinates.addAll(satisfyingPoint.coordinates);
-            firstSetOfPoints.set(i, satisfyingPoint);
-            System.out.println(firstSetOfPoints.get(i).toString());
+            setOfPoints.set(i, satisfyingPoint);
+            System.out.println("\t\t" + setOfPoints.get(i).toString());
         }
 
+        //ustal poczatkowy promien
         sort(coordinates);
-        //MIN = najmniejsza wspolrzedna sposrod spelniajacych punktow
         MIN = coordinates.get(0);
-        //MAX = najwieksza wspolrzedna sposrod spelniajacych punktow
         MAX = coordinates.get(coordinates.size() - 1);
         double RADIUS = (MAX - MIN) * 0.5;
 
-
         //wybierz pewna ilosc punktow, ktore maja odpowiednio najmniejsza/najwieksza wartosc funkcji celu
+        for(int i = 0; i < setOfPoints.size(); i++) {
+            Point tmpPoint = setOfPoints.get(i);
+            double[] coords = new double[tmpPoint.coordinates.size()];
+            for(int j = 0; j < tmpPoint.coordinates.size(); j++) {
+                coords[j] = tmpPoint.coordinates.get(i);
+            }
+            tmpPoint.objFunctionValue = targetFcn.calculate(coords);
+        }
+        sort(setOfPoints);
+        System.out.println(setOfPoints.toString());
+        if(Algo.maxMinTarget.equals("maximize")) {
+            Collections.reverse(setOfPoints);
+        }
+        Point bestPoint = setOfPoints.get(0);
+
         //dla kazdego z tych punktow znajdz pointsNum sasiadow i do jego sasiadow dodaj tez jego samego jbc
+        bestPoint.getNeighbors(POINTS_NUM, RADIUS);
+
         //wsrod sasiadow spelniajacych warunki znowu wybierz pewna ilosc i tak aż epsilon < radius
 
 
