@@ -49,4 +49,9 @@ public class Point implements Comparable<Point> {
         return new Double(this.objFunctionValue).compareTo(comparePoint.objFunctionValue);
     }
 
+    @Override
+    public String toString() {
+        return "Point: " + coordinates.toString() + " , value: " + objFunctionValue;
+    }
+
 }

@@ -16,7 +16,7 @@ public class Algo {
 
     public static final int POINTS_NUM = 10;
     private static final double SCALE = 0.8;
-    private static final int SATISFYING_POINTS_NUM = 1;
+    private static final int SATISFYING_POINTS_NUM = 5;
 
     public static double epsilon;
     public static Function targetFcn;
@@ -86,56 +86,40 @@ public class Algo {
         MAX = coordinates.get(coordinates.size() - 1);
         double RADIUS = (MAX - MIN) * 0.5;
 
-        //wybierz pewna ilosc punktow, ktore maja odpowiednio najmniejsza/najwieksza wartosc funkcji celu
-        for(int i = 0; i < setOfPoints.size(); i++) {
-            Point tmpPoint = setOfPoints.get(i);
-            double[] coords = new double[tmpPoint.coordinates.size()];
-            for(int j = 0; j < tmpPoint.coordinates.size(); j++) {
-                coords[j] = tmpPoint.coordinates.get(i);
-            }
-            tmpPoint.objFunctionValue = targetFcn.calculate(coords);
-        }
-        sort(setOfPoints);
-        System.out.println(setOfPoints.toString());
-        if(Algo.maxMinTarget.equals("maximize")) {
-            Collections.reverse(setOfPoints);
-        }
-        Point bestPoint = setOfPoints.get(0);
 
-        //dla kazdego z tych punktow znajdz pointsNum sasiadow
-        setOfPoints = bestPoint.getNeighbors(POINTS_NUM, RADIUS);
-
-
-
-
-        //dopoki promien kostki wiekszy od zadanego epsilon, szukaj kolejnych punktów
-        while(RADIUS > epsilon) {
-
-            //
-
-
-
-
-            setOfPoints = new ArrayList<>(pointsNum);
-            randomArr.fillWithRandomPoints(pointsNum, decisionVars.size(), MIN, MAX);
-            for (int i = 0; i < pointsNum; i++) {
-                //jak dany punkt spełnia to dodajemy do zbioru kolejnych setOfPoints
-                if (checkConstraints(limits.size(), randomArr.get(i))) {
-                    setOfPoints.add(randomArr.get(i));
+        Point bestPoint;
+        //szukaj kolejnych punktów, dopoki promien kostki wiekszy od zadanego epsilon
+         do {
+            //wybierz pewna ilosc punktow, ktore maja odpowiednio najmniejsza/najwieksza wartosc funkcji celu
+            for (Point tmpPoint : setOfPoints) {
+                double[] coords = new double[tmpPoint.coordinates.size()];
+                for (int j = 0; j < tmpPoint.coordinates.size(); j++) {
+                    coords[j] = tmpPoint.coordinates.get(j);
                 }
+                tmpPoint.objFunctionValue = targetFcn.calculate(coords);
             }
+            sort(setOfPoints);
+            System.out.println(setOfPoints.toString());
+            if(Algo.maxMinTarget.equals("maximize")) { //FIXME
+                Collections.reverse(setOfPoints);
+            }
+            bestPoint = setOfPoints.get(0);
+
+            //dla kazdego z tych punktow znajdz pointsNum sasiadow
+            setOfPoints = bestPoint.getNeighbors(POINTS_NUM, RADIUS);
+
             RADIUS = RADIUS * SCALE;
+
+        } while(RADIUS > epsilon);
+
+        setDecVarVals(bestPoint.coordinates);
+        System.out.println("\n================ RESULT ================\n");
+        for(int i = 0; i < decisionVars.size(); i++) {
+            System.out.println(decisionVars.toString());
         }
     }
 
     //////////////////////////////////////
-    private static ArrayList<Point> getPointsInArea(int pointsNum, int dimension, final double MIN, final double MAX) {
-        ArrayList<Point> pointsArr = new ArrayList<>(pointsNum);
-        for(int i = 0; i < pointsNum; i++) {
-            pointsArr.set(i, getSatisfyingPoint(dimension, MIN, MAX));
-        }
-        return pointsArr;
-    }
 
     private static Point getSatisfyingPoint(int dimension){
         Point point = new Point(dimension);

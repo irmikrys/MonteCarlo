@@ -16,4 +16,9 @@ public class DecisionVar {
         this.value = value;
     }
 
+    @Override
+    public String toString() {
+        return "Decision Variable: " + name + ", value: " + value;
+    }
+
 }
