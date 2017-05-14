@@ -29,6 +29,8 @@ import java.util.*;
 //TODO: reset wszystkiego przy przejściu do menu/tworzeniu nowego problemu
     //TODO: przy naciskniau submit function zeby sie nie odblokowalo add limit
 
+    //TODO: dodanie zmiennych decyzyjnych na koniec w takiej kolejnosci jak wystepuja w funkcji celu!!!
+
 public class QuestionaireController implements Initializable {
 
     static boolean nonPolyEnabled;

@@ -8,8 +8,12 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Point implements Comparable<Point> {
 
-    ArrayList<Double> coordinates;
+    ArrayList<Double> coordinates = new ArrayList<>();
     double objFunctionValue;
+
+    public Point() {
+
+    }
 
     public Point(int size) {
         super();
@@ -29,7 +33,7 @@ public class Point implements Comparable<Point> {
             for(int j = 0; j < coordinates.size(); j++) {
                 double minTmp = coordinates.get(j) - radius;
                 double maxTmp = coordinates.get(j) + radius;
-                point.coordinates.set(j, ThreadLocalRandom.current().nextDouble(minTmp, maxTmp));
+                point.coordinates.add(j, ThreadLocalRandom.current().nextDouble(minTmp, maxTmp));
             }
             if(Algo.checkConstraints(Algo.limits.size(), point)) {
                 neighbors.add(point);

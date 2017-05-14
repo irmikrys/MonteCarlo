@@ -5,7 +5,6 @@ import org.mariuszgromada.math.mxparser.Function;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static java.util.Collections.sort;
 
@@ -14,9 +13,10 @@ import static java.util.Collections.sort;
  */
 public class Algo {
 
-    public static final int POINTS_NUM = 10;
-    private static final double SCALE = 0.8;
+    public static final int POINTS_NUM = 5;
+    private static final double SCALE = 0.5;
     private static final int SATISFYING_POINTS_NUM = 5;
+    private static final int ITER_NUM = 10;
 
     public static double epsilon;
     public static Function targetFcn;
@@ -76,7 +76,7 @@ public class Algo {
         for(int i = 0; i < pointsNum; i++) {
             Point satisfyingPoint = getSatisfyingPoint(decisionVars.size());
             coordinates.addAll(satisfyingPoint.coordinates);
-            setOfPoints.set(i, satisfyingPoint);
+            setOfPoints.add(i, satisfyingPoint);
             System.out.println("\t\t" + setOfPoints.get(i).toString());
         }
 
@@ -90,6 +90,7 @@ public class Algo {
         Point bestPoint;
         //szukaj kolejnych punktów, dopoki promien kostki wiekszy od zadanego epsilon
          do {
+             bestPoint = new Point();
             //wybierz pewna ilosc punktow, ktore maja odpowiednio najmniejsza/najwieksza wartosc funkcji celu
             for (Point tmpPoint : setOfPoints) {
                 double[] coords = new double[tmpPoint.coordinates.size()];
@@ -100,9 +101,11 @@ public class Algo {
             }
             sort(setOfPoints);
             System.out.println(setOfPoints.toString());
-            if(Algo.maxMinTarget.equals("maximize")) { //FIXME
+            if(Algo.maxMinTarget.equals("minimize")) { //FIXME
+                System.out.println("======MINIMIZE=======");
                 Collections.reverse(setOfPoints);
             }
+            System.out.println("======MAXIMIZE=======");
             bestPoint = setOfPoints.get(0);
 
             //dla kazdego z tych punktow znajdz pointsNum sasiadow
@@ -114,34 +117,28 @@ public class Algo {
 
         setDecVarVals(bestPoint.coordinates);
         System.out.println("\n================ RESULT ================\n");
-        for(int i = 0; i < decisionVars.size(); i++) {
-            System.out.println(decisionVars.toString());
+        for (DecisionVar decisionVar : decisionVars) {
+            System.out.println(decisionVar.toString());
         }
     }
 
     //////////////////////////////////////
 
     private static Point getSatisfyingPoint(int dimension){
-        Point point = new Point(dimension);
+        System.out.println("TRYING TO GET SATISFYING POINT...");
+        Point point = new Point();
+        point.coordinates = new ArrayList<>(dimension);
         Random random = new Random();
+        double[] tmpCoords = new double[dimension];
         while(true){
-            for(int i = 0; i < dimension; i++){
-                point.coordinates.set(i, random.nextDouble());
-            }
-            if(checkConstraints(limits.size(), point)){
-                return point;
-            }
-        }
-    }
-
-    private static Point getSatisfyingPoint(int dimension, final double MIN, final double MAX){
-        Point point = new Point(dimension);
-        while(true){
-            for(int i = 0; i < dimension; i++){
-                point.coordinates.set(i, ThreadLocalRandom.current().nextDouble(MIN, MAX));
-            }
-            if(checkConstraints(limits.size(), point)){
-                return point;
+            for(int iter = 0; iter < ITER_NUM; iter++) {
+                for (int i = 0; i < dimension; i++) {
+                    tmpCoords[i] = random.nextDouble() * iter;
+                    point.coordinates.add(i, tmpCoords[i]);
+                }
+                if (checkConstraints(limits.size(), point)) {
+                    return point;
+                }
             }
         }
     }

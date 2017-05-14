@@ -53,32 +53,32 @@ public class LimitField {
         //sprawdz jaki znak jest w tym polu i porownaj wartosc funkcji z wartoscia tfVal
         switch(this.sign){
             case "<":
-                System.out.println("\t\tSign: <");
                 if(!(v < this.value)){
                     System.out.println("\t\tExpression: " + v + " < " + this.value + " is false." );
                     return false;
                 }
+                System.out.println("\t\tExpression: " + v + " < " + this.value + " is true." );
                 break;
             case "<=":
-                System.out.println("\t\tSign: <=");
                 if(!(v <= this.value)){
                     System.out.println("\t\tExpression: " + v + " <= " + this.value + " is false." );
                     return false;
                 }
+                System.out.println("\t\tExpression: " + v + " <= " + this.value + " is true." );
                 break;
             case ">":
-                System.out.println("\t\tSign: >");
                 if(!(v > this.value)){
                     System.out.println("\t\tExpression: " + v + " > " + this.value + " is false." );
                     return false;
                 }
+                System.out.println("\t\tExpression: " + v + " > " + this.value + " is true." );
                 break;
             case ">=":
-                System.out.println("\t\tSign: >=");
                 if(!(v >= this.value)){
                     System.out.println("\t\tExpression: " + v + " >= " + this.value + " is false." );
                     return false;
                 }
+                System.out.println("\t\tExpression: " + v + " >= " + this.value + " is true." );
                 break;
         }
         return true;
