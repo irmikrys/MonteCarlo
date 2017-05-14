@@ -373,8 +373,8 @@ public class QuestionaireController implements Initializable {
     private boolean checkExpressionField(String tfText){
         if(!QuestionaireController.nonPolyEnabled) {
             if(tfText.matches(
-                    "^[-]?([0-9]+\\.?[0-9]*\\s*[*]\\s*)?[x][0-9]*(\\^[0-9]+)?" +
-                            "(\\s*[+-]\\s*([0-9]+\\.?[0-9]*\\s*[*]\\s*)?[x][0-9]*(\\^[0-9]+)?)*$")
+                    "^[-]?([0-9]+\\.?[0-9]*\\s*[*]\\s*)?[x][0-9]*(\\^[0-9]+\\s*)?" +
+                            "(\\s*[+-]\\s*([0-9]+\\.?[0-9]*\\s*[*]\\s*)?[x][0-9]*(\\^[0-9]+\\s*)?)*$")
                     ) {
                 return true;
             } else {
