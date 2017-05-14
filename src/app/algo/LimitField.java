@@ -31,7 +31,7 @@ public class LimitField {
     }
 
     public boolean checkConstraint(ArrayList<DecisionVar> decVars) {
-        System.out.println("\t" + this.toString());
+        //System.out.println("\t" + this.toString());
 
         int sizeTmp = this.vars.size();
         double[] argsTmp = new double[sizeTmp];
@@ -41,44 +41,44 @@ public class LimitField {
             for (DecisionVar decisionVar : decVars) {
                 if (decisionVar.name.equals(this.vars.get(arg))) {
                     argsTmp[arg] = decisionVar.value;
-                    System.out.println("\t\tValue of " + decisionVar.name + " set to: " + argsTmp[arg]);
+                    //System.out.println("\t\tValue of " + decisionVar.name + " set to: " + argsTmp[arg]);
                 }
             }
         }
 
         //oblicz wartosc funkcji dla danego limitu
         double v = this.function.calculate(argsTmp);
-        System.out.println("\tCalculated value: " + v);
+        //System.out.println("\tCalculated value: " + v);
 
         //sprawdz jaki znak jest w tym polu i porownaj wartosc funkcji z wartoscia tfVal
         switch(this.sign){
             case "<":
                 if(!(v < this.value)){
-                    System.out.println("\t\tExpression: " + v + " < " + this.value + " is false." );
+                    //System.out.println("\t\tExpression: " + v + " < " + this.value + " is false." );
                     return false;
                 }
-                System.out.println("\t\tExpression: " + v + " < " + this.value + " is true." );
+                //System.out.println("\t\tExpression: " + v + " < " + this.value + " is true." );
                 break;
             case "<=":
                 if(!(v <= this.value)){
-                    System.out.println("\t\tExpression: " + v + " <= " + this.value + " is false." );
+                    //System.out.println("\t\tExpression: " + v + " <= " + this.value + " is false." );
                     return false;
                 }
-                System.out.println("\t\tExpression: " + v + " <= " + this.value + " is true." );
+                //System.out.println("\t\tExpression: " + v + " <= " + this.value + " is true." );
                 break;
             case ">":
                 if(!(v > this.value)){
-                    System.out.println("\t\tExpression: " + v + " > " + this.value + " is false." );
+                    //System.out.println("\t\tExpression: " + v + " > " + this.value + " is false." );
                     return false;
                 }
-                System.out.println("\t\tExpression: " + v + " > " + this.value + " is true." );
+                //System.out.println("\t\tExpression: " + v + " > " + this.value + " is true." );
                 break;
             case ">=":
                 if(!(v >= this.value)){
-                    System.out.println("\t\tExpression: " + v + " >= " + this.value + " is false." );
+                    //System.out.println("\t\tExpression: " + v + " >= " + this.value + " is false." );
                     return false;
                 }
-                System.out.println("\t\tExpression: " + v + " >= " + this.value + " is true." );
+                //System.out.println("\t\tExpression: " + v + " >= " + this.value + " is true." );
                 break;
         }
         return true;

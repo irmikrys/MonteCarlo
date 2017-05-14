@@ -425,13 +425,13 @@ public class Function extends PrimitiveElement {
 		if (params.length == this.getParametersNumber()) {
 			//System.out.println("\t\t\tPARAMS LENGTH AND PARAMETERS NUBER THE SAME");
 			if (functionBodyType == BODY_RUNTIME) {
-				System.out.println("\t\t\tRUNTIME");
+				//System.out.println("\t\t\tRUNTIME");
 				for (int p = 0; p < params.length; p++) {
 					setArgumentValue(p, params[p]);
 					//System.out.println("\t\t\t\t" + params[p]);
 				}
 			} else {
-				System.out.println("\t\t\tELSE");
+				//System.out.println("\t\t\tELSE");
 				for (int p = 0; p < params.length; p++) {
 					functionExtension.setParameterValue(p, params[p]);
 					//System.out.println("\t\t\t\tELSE: " + params[p]);

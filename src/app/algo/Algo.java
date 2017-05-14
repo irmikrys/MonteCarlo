@@ -15,7 +15,7 @@ import static java.util.Collections.sort;
 public class Algo {
 
     public static final int POINTS_NUM = 1000;
-    private static final double SCALE = 0.5;
+    private static final double SCALE = 0.8;
     private static final int SATISFYING_POINTS_NUM = 5;
     private static final int ITER_NUM = 10;
 
@@ -44,7 +44,7 @@ public class Algo {
      * @return - true if all limits are satisfied, false if any is not
      */
     public static boolean checkConstraints(int limitsNum, Point point) {
-        System.out.println("\nChecking constraints...");
+        //System.out.println("\nChecking constraints...");
 
         boolean satisfies;
 
@@ -73,11 +73,15 @@ public class Algo {
         ArrayList<Double> coordinates = new ArrayList<>();
 
         //znajdz pointsNum punktow na poczatek spelniajacych ograniczenia i dodaj do zbioru wspolrzednych
+        boolean max = false;
+        if(maxMinTarget.equals("maximize")) max = true;
+        else max = false;
+        int magnitude = getStartingMagnitude(max);
         for(int i = 0; i < pointsNum; i++) {
-            Point satisfyingPoint = getSatisfyingPoint(decisionVars.size());
+            Point satisfyingPoint = getSatisfyingPoint(decisionVars.size(), magnitude);
             coordinates.addAll(satisfyingPoint.coordinates);
             setOfPoints.add(i, satisfyingPoint);
-            System.out.println("\t\t" + setOfPoints.get(i).toString());
+            //System.out.println("\t\t" + setOfPoints.get(i).toString());
         }
 
         //ustal poczatkowy promien
@@ -100,13 +104,13 @@ public class Algo {
                 tmpPoint.objFunctionValue = targetFcn.calculate(coords);
             }
             sort(setOfPoints);
-            System.out.println(setOfPoints.toString());
+            //System.out.println(setOfPoints.toString());
             if(Algo.maxMinTarget.equals("maximize")) { //FIXME
-                System.out.println("======MAXIMIZE=======");
+                //System.out.println("======MAXIMIZE=======");
                 Collections.reverse(setOfPoints);
             }
             else {
-                System.out.println("======MINIMIZE=======");
+                //System.out.println("======MINIMIZE=======");
             }
             bestPoint = setOfPoints.get(0);
 
@@ -127,7 +131,7 @@ public class Algo {
 
     //////////////////////////////////////
 
-    private static Point getSatisfyingPoint(int dimension){
+    private static Point getSatisfyingPoint(int dimension, int magnitude){
         //System.out.println("\n\n======TRYING TO GET SATISFYING POINT...");
         Point point = new Point();
         point.coordinates = new ArrayList<>(dimension);
@@ -137,17 +141,30 @@ public class Algo {
         Random random = new Random();
         double[] tmpCoords = new double[dimension];
         while(true){
-            for(int iter = 1; iter < ITER_NUM; iter++) {
+            for(int iter = magnitude; iter >= 1; --iter) {
                 for (int i = 0; i < dimension; i++) {
-                    tmpCoords[i] = random.nextDouble() * iter;
+                    tmpCoords[i] = random.nextDouble() * Math.pow(10, iter);
                     point.coordinates.set(i, tmpCoords[i]);
                 }
                 if (checkConstraints(limits.size(), point)) {
-                    System.out.println("====Satisfying " + point.toString());
+                    //System.out.println("====Satisfying " + point.toString());
                     return point;
                 }
             }
         }
+    }
+
+    private static int getStartingMagnitude(boolean maximize) {
+        int val = 1;
+        for(LimitField lf : limits) {
+            if (lf.value > val) val = (int) ((double) lf.value);
+        }
+        int magnitude = 2;
+        while(val > 1) {
+            val /= 10;
+            ++magnitude;
+        }
+        return magnitude;
     }
 
     private static void clearDecVarVals() {
