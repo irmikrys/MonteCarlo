@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 import static java.lang.Math.abs;
+import static java.lang.Math.sqrt;
 import static java.util.Collections.sort;
 
 /**
@@ -16,8 +17,8 @@ import static java.util.Collections.sort;
 public class Algo {
 
     public static final int POINTS_NUM = 1000;
-    public static final double SCALE = 0.8;
-    private static final int STARTING_POINTS = 16;
+    public static final double SCALE = 0.7;
+    public static final int STARTING_POINTS = 16;
 
     public static double epsilon;
     public static Function targetFcn;
@@ -73,6 +74,8 @@ public class Algo {
         double MIN, MAX;
         ArrayList<Point> setOfPoints = new ArrayList<>(pointsNum);
         ArrayList<Double> coordinates = new ArrayList<>();
+        ArrayList<Point> chosenPoints = new ArrayList<>(pointsNum);
+
 
         //znajdz pointsNum punktow na poczatek spelniajacych ograniczenia i dodaj do zbioru wspolrzednych
         boolean max = false;
@@ -92,8 +95,27 @@ public class Algo {
         double radius = abs((MAX - MIN) * 0.5);
         //System.out.println(">>>>>>> RADIUS: "+radius);
 
+        sort(setOfPoints);
+        //System.out.println(setOfPoints.toString());
+
+        Collections.reverse(setOfPoints);
+        double bestValPoint = Double.MAX_VALUE;
+        int bestIndexPoint = 0;
         for(int i = 0; i < STARTING_POINTS; ++i) {
-            threadPool.add(new MonteCarloBranch(pointsNum, radius, epsilon, bestPoints, setOfPoints.get(i), targetFcn));
+            bestIndexPoint = 0;
+            for(int j = 0; j < setOfPoints.size(); ++j) {
+                double cost = calcPointCost(setOfPoints.get(i), setOfPoints, radius, setOfPoints.get(0).objFunctionValue);
+                if (cost < bestValPoint) {
+                    bestValPoint = cost;
+                    bestIndexPoint = i;
+                }
+            }
+            chosenPoints.add(setOfPoints.get(bestIndexPoint));
+            setOfPoints.remove(bestIndexPoint);
+        }
+
+        for(int i = 0; i < STARTING_POINTS; ++i) {
+            threadPool.add(i, new MonteCarloBranch(pointsNum, radius, epsilon, bestPoints, setOfPoints.get(i), targetFcn));
             threadPool.get(i).start();
         }
 
@@ -168,6 +190,18 @@ public class Algo {
     }
 
     //////////////////////////////////////
+    public static double calcPointCost(Point p, ArrayList<Point> alreadyChosen, double radius, double val) {
+        double closest = Double.MAX_VALUE;
+        for(Point close : alreadyChosen) {
+            double howFar = 0;
+            for(double coord : close.coordinates) {
+                howFar += coord*coord;
+            }
+            howFar = sqrt(howFar);
+            if(closest > howFar) closest = howFar;
+        }
+        return -p.objFunctionValue + (1/closest)*radius*(val/10);
+    }
 
     private static Point getSatisfyingPoint(int dimension, int magnitude){
         //System.out.println("\n\n======TRYING TO GET SATISFYING POINT...");

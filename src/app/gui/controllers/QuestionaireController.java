@@ -1,10 +1,7 @@
 package app.gui.controllers;
 
 import app.Main;
-import app.algo.Algo;
-import app.algo.DecisionVar;
-import app.algo.LimitField;
-import app.algo.Point;
+import app.algo.*;
 import app.gui.ActionsHandler;
 import app.gui.ButtonFields;
 import javafx.event.ActionEvent;
@@ -28,8 +25,6 @@ import java.util.*;
 //TODO: sprawdzanie przypadku dowolnej funkcji, nie tylko wielomianu
 
 public class QuestionaireController implements Initializable {
-
-    private Algo algo = new Algo();
 
     static boolean nonPolyEnabled;
     private ArrayList<String> signsArr = new ArrayList<>(Arrays.asList("<", "<=", ">", ">="));
@@ -73,6 +68,7 @@ public class QuestionaireController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        //System.out.println("Scene created...");
         constraintsCounter = 0;
         isTfFcnOk = false;
         isTfConstrOk = false;
@@ -96,10 +92,12 @@ public class QuestionaireController implements Initializable {
         minimizeCheck.setDisable(true);
 
         Algo.epsilon = Double.parseDouble(lblEpsVal.getText());
-        Algo.decisionVars.clear();
+        Algo.decisionVars = new ArrayList<>();
         Algo.maxMinTarget = "maximize";
-        Algo.limits.clear();
+        Algo.limits = new ArrayList<>();
         Algo.targetFcn = null;
+        Algo.threadPool = new ArrayList<>(Algo.STARTING_POINTS);
+
     }
 
     ////////////////////////////////////
@@ -377,7 +375,13 @@ public class QuestionaireController implements Initializable {
         else {
             ArrayList<String> tmpDecVars = new ArrayList<>();
             Function fcn = createFunctionFromString(tfText, tmpDecVars);
-            return fcn.checkSyntax();
+            ArrayList<String> arr = new ArrayList<>(Arrays.asList("<", ">", "<=", ">=", " a ", " b ", " y ", "=", "!", "_"));
+            String[]arrStr = new String[arr.size()];
+            for(int i = 0; i < arr.size(); i++){
+                arrStr[i] = arr.get(i);
+            }
+            boolean cont = stringContainsItemFromList(tfText, arrStr);
+            return (fcn.checkSyntax() && !cont);
         }
     }
 
@@ -412,6 +416,10 @@ public class QuestionaireController implements Initializable {
         System.out.println(fcnString);
         Function f = new Function(fcnString);
         return f;
+    }
+
+    public static boolean stringContainsItemFromList(String inputStr, String[] items) {
+        return Arrays.stream(items).parallel().anyMatch(inputStr::contains);
     }
 
     ////////////////////////////////////////
@@ -497,6 +505,7 @@ public class QuestionaireController implements Initializable {
 
     @FXML
     public void computeResult(ActionEvent e) {
+        Algo.bestPoints = Collections.synchronizedList(new ArrayList<Point>());
         Point point = Algo.monteCarlo(Algo.POINTS_NUM);
         double[] coords = new double[point.coordinates.size()];
         for (int j = 0; j < point.coordinates.size(); j++) {
