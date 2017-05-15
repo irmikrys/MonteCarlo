@@ -29,6 +29,8 @@ import java.util.*;
 
 public class QuestionaireController implements Initializable {
 
+    private Algo algo = new Algo();
+
     static boolean nonPolyEnabled;
     private ArrayList<String> signsArr = new ArrayList<>(Arrays.asList("<", "<=", ">", ">="));
     private boolean isAddReleased = true;
@@ -368,17 +370,14 @@ public class QuestionaireController implements Initializable {
     //TODO: dodać przypadek gdy dowolna funkcja, nie tylko wielomiany
     private boolean checkExpressionField(String tfText){
         if(!QuestionaireController.nonPolyEnabled) {
-            if(tfText.matches(
+            return tfText.matches(
                     "^[-]?([0-9]+\\.?[0-9]*\\s*[*]\\s*)?[x][0-9]*(\\^[0-9]+\\s*)?" +
-                            "(\\s*[+-]\\s*([0-9]+\\.?[0-9]*\\s*[*]\\s*)?[x][0-9]*(\\^[0-9]+\\s*)?)*$")
-                    ) {
-                return true;
-            } else {
-                return  false;
-            }
+                            "(\\s*[+-]\\s*([0-9]+\\.?[0-9]*\\s*[*]\\s*)?[x][0-9]*(\\^[0-9]+\\s*)?)*$");
         }
         else {
-            return true;
+            ArrayList<String> tmpDecVars = new ArrayList<>();
+            Function fcn = createFunctionFromString(tfText, tmpDecVars);
+            return fcn.checkSyntax();
         }
     }
 
@@ -455,7 +454,9 @@ public class QuestionaireController implements Initializable {
         else{
             objFcnString += "min";
         }
-        hBoxObjFcn.getChildren().clear();
+        if(hBoxObjFcn.getChildren().size() > 0) {
+            hBoxObjFcn.getChildren().clear();
+        }
         hBoxObjFcn.getChildren().add(new Label(objFcnString));
 
         btnSubmitFcn.setDisable(true);
