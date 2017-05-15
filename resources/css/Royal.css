@@ -1,4 +1,4 @@
-.root{
+.root, .split-pane, #borderPaneFirst{
     -fx-background-color: brown;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
