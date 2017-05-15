@@ -26,7 +26,7 @@
     -fx-background-insets: 5px;
 }
 
-.radio-button {
+.check-box ,.radio-button {
     -fx-text-fill: burlywood;
 }
 
@@ -38,7 +38,7 @@
             linear-gradient(#f6ebbe, #e6c34d);
     -fx-background-radius: 10px;
 }
-.choice-box .label, .combo-box .label {
+.combo-box .label {
     -fx-text-fill: #311c09;
 }
 
