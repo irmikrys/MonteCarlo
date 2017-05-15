@@ -4,6 +4,7 @@ import org.mariuszgromada.math.mxparser.Function;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 import static java.lang.Math.abs;
@@ -15,15 +16,16 @@ import static java.util.Collections.sort;
 public class Algo {
 
     public static final int POINTS_NUM = 1000;
-    private static final double SCALE = 0.8;
-    private static final int SATISFYING_POINTS_NUM = 5;
-    private static final int ITER_NUM = 10;
+    public static final double SCALE = 0.8;
+    private static final int STARTING_POINTS = 16;
 
     public static double epsilon;
     public static Function targetFcn;
     public static String maxMinTarget;
     public static ArrayList<LimitField> limits = new ArrayList<>();
     public static ArrayList<DecisionVar> decisionVars = new ArrayList<>();
+    public static ArrayList<MonteCarloBranch> threadPool = new ArrayList<>(STARTING_POINTS);
+    public static List<Point> bestPoints = Collections.synchronizedList(new ArrayList<Point>());
 
     /////////////////////////////////////////////////
 
@@ -74,8 +76,7 @@ public class Algo {
 
         //znajdz pointsNum punktow na poczatek spelniajacych ograniczenia i dodaj do zbioru wspolrzednych
         boolean max = false;
-        if(maxMinTarget.equals("maximize")) max = true;
-        else max = false;
+        max = maxMinTarget.equals("maximize");
         int magnitude = getStartingMagnitude(max);
         for(int i = 0; i < pointsNum; i++) {
             Point satisfyingPoint = getSatisfyingPoint(decisionVars.size(), magnitude);
@@ -88,10 +89,24 @@ public class Algo {
         sort(coordinates);
         MIN = coordinates.get(0);
         MAX = coordinates.get(coordinates.size() - 1);
-        double RADIUS = abs((MAX - MIN) * 0.5);
-        //System.out.println(">>>>>>> RADIUS: "+RADIUS);
+        double radius = abs((MAX - MIN) * 0.5);
+        //System.out.println(">>>>>>> RADIUS: "+radius);
 
-        Point bestPoint;
+        for(int i = 0; i < STARTING_POINTS; ++i) {
+            threadPool.add(new MonteCarloBranch(pointsNum, radius, epsilon, bestPoints, setOfPoints.get(i), targetFcn));
+            threadPool.get(i).start();
+        }
+
+        for(int i = 0; i < STARTING_POINTS; ++i) {
+            try {
+                threadPool.get(i).join();
+                System.out.println("thread " + i + " joined");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        /*Point bestPoint;
         //szukaj kolejnych punktów, dopoki promien kostki wiekszy od zadanego epsilon
          do {
              bestPoint = new Point();
@@ -115,19 +130,28 @@ public class Algo {
             bestPoint = setOfPoints.get(0);
 
             //dla kazdego z tych punktow znajdz pointsNum sasiadow
-            setOfPoints = bestPoint.getNeighbors(POINTS_NUM, RADIUS);
+            setOfPoints = bestPoint.getNeighbors(POINTS_NUM, radius);
 
-            RADIUS = RADIUS * SCALE;
+            radius = radius * SCALE;
              //System.out.println(">>>>>>> RADIUS: "+RADIUS);
 
-        } while(RADIUS > epsilon);
+        } while(radius > epsilon); */
 
-        setDecVarVals(bestPoint.coordinates);
+        //FIXME tak zeby dziallo tez dla minimum, czyli jak gdziestam ejst zaznaczone ze ma minimalizowac to zeby szukalo najmniejszej
+        double bestVal = 0;
+        int bestIndex = 0;
+        for(int i = 0; i < STARTING_POINTS; ++i) {
+            if(bestPoints.get(i).objFunctionValue > bestVal) {
+                bestVal = bestPoints.get(i).objFunctionValue;
+                bestIndex = i;
+            }
+        }
+        setDecVarVals(bestPoints.get(bestIndex).coordinates);
         System.out.println("\n================ RESULT ================\n");
         for (DecisionVar decisionVar : decisionVars) {
             System.out.println(decisionVar.toString());
         }
-        return bestPoint;
+        return bestPoints.get(bestIndex);
     }
 
     //////////////////////////////////////
@@ -180,5 +204,66 @@ public class Algo {
         for(int i = 0; i < decisionVars.size(); i++) {
             decisionVars.get(i).value = coordinates.get(i);
         }
+    }
+}
+
+///////////////////////////////////////////////
+
+class MonteCarloBranch extends Thread {
+    ArrayList<Point> setOfPoints;
+    List<Point> bestPoints;
+    Function targetFcn;
+    double radius;
+    double epsilon;
+
+    MonteCarloBranch(int pointsNum, double radius, double epsilon, List<Point> bestPoints, Point startingPoint, Function targetFcn) {
+        this.setOfPoints = new ArrayList<>(pointsNum);
+        Point cpPoint = new Point();
+        for(int j = 0; j < startingPoint.coordinates.size(); ++j) {
+            cpPoint.coordinates.add(startingPoint.coordinates.get(j));
+        }
+        this.targetFcn = new Function(targetFcn);
+        this.setOfPoints.add(cpPoint);
+        this.bestPoints = bestPoints;
+        this.radius = radius;
+        this.epsilon = epsilon;
+    }
+
+    @Override
+    public void run() {
+        Point bestPoint;
+        //szukaj kolejnych punktów, dopoki promien kostki wiekszy od zadanego epsilon
+        do {
+            //wybierz pewna ilosc punktow, ktore maja odpowiednio najmniejsza/najwieksza wartosc funkcji celu
+            for (Point tmpPoint : setOfPoints) {
+                double[] coords = new double[tmpPoint.coordinates.size()];
+                for (int j = 0; j < tmpPoint.coordinates.size(); j++) {
+                    coords[j] = tmpPoint.coordinates.get(j);
+                }
+                tmpPoint.objFunctionValue = targetFcn.calculate(coords);
+            }
+            sort(setOfPoints);
+            //System.out.println(setOfPoints.toString());
+            if(Algo.maxMinTarget.equals("maximize")) {
+                //System.out.println("======MAXIMIZE=======");
+                Collections.reverse(setOfPoints);
+            }
+            else {
+                //System.out.println("======MINIMIZE=======");
+            }
+            bestPoint = setOfPoints.get(0);
+
+            //dla kazdego z tych punktow znajdz pointsNum sasiadow
+            synchronized (Algo.class) {
+                setOfPoints = bestPoint.getNeighbors(Algo.POINTS_NUM, radius);
+            }
+
+            radius = radius * Algo.SCALE;
+            //System.out.println(">>>>>>> RADIUS: "+RADIUS);
+
+        } while(radius > epsilon);
+
+        System.out.println("returning from thread");
+        bestPoints.add(bestPoint);
     }
 }

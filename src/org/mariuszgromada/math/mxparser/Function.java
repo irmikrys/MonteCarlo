@@ -301,7 +301,7 @@ public class Function extends PrimitiveElement {
 	 * @param      function            the function, which is going
 	 *                                 to be cloned.
 	 */
-	private Function(Function function) {
+	public Function(Function function) {
 		super(Function.TYPE_ID);
 		functionName = function.functionName;
 		description = function.description;
