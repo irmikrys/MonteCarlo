@@ -137,13 +137,26 @@ public class Algo {
 
         } while(radius > epsilon); */
 
-        //FIXME tak zeby dziallo tez dla minimum, czyli jak gdziestam ejst zaznaczone ze ma minimalizowac to zeby szukalo najmniejszej
-        double bestVal = 0;
-        int bestIndex = 0;
-        for(int i = 0; i < STARTING_POINTS; ++i) {
-            if(bestPoints.get(i).objFunctionValue > bestVal) {
-                bestVal = bestPoints.get(i).objFunctionValue;
-                bestIndex = i;
+        double bestVal;
+        int bestIndex;
+        if(maxMinTarget.equals("maximize")) {
+            bestVal = 0;
+            bestIndex = 0;
+            for (int i = 0; i < STARTING_POINTS; ++i) {
+                if (bestPoints.get(i).objFunctionValue > bestVal) {
+                    bestVal = bestPoints.get(i).objFunctionValue;
+                    bestIndex = i;
+                }
+            }
+        }
+        else{
+            bestVal = Double.MAX_VALUE;
+            bestIndex = 0;
+            for (int i = 0; i < STARTING_POINTS; ++i) {
+                if (bestPoints.get(i).objFunctionValue > bestVal) {
+                    bestVal = bestPoints.get(i).objFunctionValue;
+                    bestIndex = i;
+                }
             }
         }
         setDecVarVals(bestPoints.get(bestIndex).coordinates);
